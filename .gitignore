@@ -1,0 +1,6 @@
+*.pyc
+index.html
+Makefile
+plugin_upload.py
+help/
+README.txt
