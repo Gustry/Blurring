@@ -6,83 +6,99 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>227</width>
-    <height>151</height>
+    <width>310</width>
+    <height>194</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Blurring</string>
   </property>
-  <widget class="QWidget" name="formLayoutWidget">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>10</y>
-     <width>201</width>
-     <height>61</height>
+     <width>301</width>
+     <height>179</height>
     </rect>
    </property>
-   <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Couche à flouter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBox_blurredLayer"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Rayon (m)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="spinBox_radius">
+        <property name="minimum">
+         <number>50</number>
+        </property>
+        <property name="maximum">
+         <number>999999999</number>
+        </property>
+        <property name="singleStep">
+         <number>50</number>
+        </property>
+        <property name="value">
+         <number>1000</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_calculation">
       <property name="text">
-       <string>Couche à flouter</string>
+       <string>Calculer</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QComboBox" name="comboBox_blurredLayer"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Rayon (m)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QSpinBox" name="spinBox_radius">
-      <property name="minimum">
-       <number>50</number>
-      </property>
-      <property name="maximum">
-       <number>999999999</number>
-      </property>
-      <property name="singleStep">
-       <number>50</number>
-      </property>
+    <item>
+     <widget class="QProgressBar" name="progressBar_progression">
       <property name="value">
-       <number>1000</number>
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Ci-dessous, temporaire, uniquement pour le debug :</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="checkBox_premierBuffer">
+      <property name="text">
+       <string>Afficher le premier buffer</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="checkBox_pointAlea">
+      <property name="text">
+       <string>Afficher les points aléatoires</string>
       </property>
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QPushButton" name="pushButton_calculation">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>90</y>
-     <width>93</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Calculer</string>
-   </property>
-  </widget>
-  <widget class="QProgressBar" name="progressBar_progression">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>120</y>
-     <width>201</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="value">
-    <number>0</number>
-   </property>
   </widget>
  </widget>
  <resources/>

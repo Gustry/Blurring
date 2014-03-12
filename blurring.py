@@ -71,7 +71,9 @@ class Blurring:
         #Connecteurs
         QObject.connect(self.dlg.pushButton_calculation, SIGNAL("clicked()"), self.calculation)
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerRemoved(QString)"), self.layerDeleted)
-        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QString)"), self.layerAdded)
+        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QgsMapLayer)"), self.layerAdded)
+        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layersAdded(QgsMapLayer)"), self.layerAdded)
+        #QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("legendLayersAdded(QList)"), self.layerAdded)
 
     def unload(self):
         # Remove the plugin menu item and icon
@@ -81,6 +83,7 @@ class Blurring:
     # run method that performs all the real work
     def run(self):
         self.layers = self.iface.legendInterface().layers()
+        self.dlg.comboBox_blurredLayer.clear()
         #Remplissage du menu déroulant
         for layer in self.layers:
             if layer.LayerType() == 0 and layer.geometryType() == 0 :
@@ -88,6 +91,8 @@ class Blurring:
                  
         if self.dlg.comboBox_blurredLayer.count() < 1:
             self.dlg.pushButton_calculation.setEnabled(False)
+        else:
+            self.dlg.pushButton_calculation.setEnabled(True)
         
         self.dlg.show()
 
@@ -98,6 +103,8 @@ class Blurring:
         """Recuperation des champs du formulaire"""
         layerName = self.dlg.comboBox_blurredLayer.currentText()
         radius = self.dlg.spinBox_radius.value()
+        debugPointAlea = self.dlg.checkBox_pointAlea.isChecked()
+        debugPremierBuffer = self.dlg.checkBox_premierBuffer.isChecked()
         
         """Recuperation de la couche"""
         layer = self.mapLayerRegistry.mapLayersByName(layerName)[0]
@@ -112,12 +119,14 @@ class Blurring:
         self.dataProviderPolygonBufFinalLayer.addAttributes(list(fields))
         
         """Creation de la couche buffer 1"""
-        #self.polygonLayer = QgsVectorLayer("Polygon",self.dlg.tr(u"Buffer 1"), "memory")
-        #self.dataProviderPolygonLayer = self.polygonLayer.dataProvider()
+        if debugPremierBuffer :
+            self.polygonLayer = QgsVectorLayer("Polygon",self.dlg.tr(u"Buffer 1"), "memory")
+            self.dataProviderPolygonLayer = self.polygonLayer.dataProvider()
         
         """Creation de la couche point alea"""
-        self.pointAleaLayer = QgsVectorLayer("Point",self.dlg.tr(u"Point Alea"), "memory")
-        self.dataProviderPointAleaLayer = self.pointAleaLayer.dataProvider()
+        if debugPointAlea :
+            self.pointAleaLayer = QgsVectorLayer("Point",self.dlg.tr(u"Point Alea"), "memory")
+            self.dataProviderPointAleaLayer = self.pointAleaLayer.dataProvider()
         
         """Iteration sur la couche ponctuelle"""
         for i,feature in enumerate(layer.getFeatures()):
@@ -127,10 +136,10 @@ class Blurring:
             attrs = feature.attributes()
             
             """Creation du premier buffer"""
-            #bufferFeature1 = QgsFeature()
-            #bufferFeature1.setGeometry(geom.buffer(radius,30))
-            """Ajout a la couche buffer1"""
-            #self.polygonLayer.dataProvider().addFeatures([bufferFeature1])
+            if debugPremierBuffer :
+                bufferFeature1 = QgsFeature()
+                bufferFeature1.setGeometry(geom.buffer(radius,30))
+                self.polygonLayer.dataProvider().addFeatures([bufferFeature1])
             
             """Tirage du point aleatoire"""
             teta = math.pi*random.uniform(0, 2)
@@ -140,11 +149,10 @@ class Blurring:
             
             """Creation du point aleatoire"""
             pointAleaGeom = QgsGeometry.fromPoint(QgsPoint(randomX, randomY))
-            pointAleaFeature = QgsFeature()
-            pointAleaFeature.setGeometry(pointAleaGeom)
-            
-            """Ajout a la couche pointAlea"""
-            self.pointAleaLayer.dataProvider().addFeatures([pointAleaFeature])
+            if debugPointAlea :
+                pointAleaFeature = QgsFeature()
+                pointAleaFeature.setGeometry(pointAleaGeom)
+                self.pointAleaLayer.dataProvider().addFeatures([pointAleaFeature])
             
             """Creation du buffer final"""
             bufferGeom2 = pointAleaGeom.buffer(radius,30)
@@ -159,16 +167,17 @@ class Blurring:
             percent =int((i+1)*100/layer.featureCount())
             self.dlg.progressBar_progression.setValue(percent)
         
-        """Validation des changements""" 
-        #self.polygonLayer.commitChanges()
-        self.pointAleaLayer.commitChanges()
+        """Validation des changements et ajout de la couche à la carte""" 
         self.polygonBufferFinalLayer.commitChanges()
-        
-        """Ajout des couches à la carte"""
-        #QgsMapLayerRegistry.instance().addMapLayer(self.polygonLayer)
         QgsMapLayerRegistry.instance().addMapLayer(self.polygonBufferFinalLayer)
-        #QgsMapLayerRegistry.instance().addMapLayer(self.pointAleaLayer)
         
+        if debugPointAlea :
+            self.pointAleaLayer.commitChanges()
+            QgsMapLayerRegistry.instance().addMapLayer(self.pointAleaLayer)
+            
+        if debugPremierBuffer :
+            self.polygonLayer.commitChanges()
+            QgsMapLayerRegistry.instance().addMapLayer(self.polygonLayer)
 
         
     def layerDeleted(self,idLayer):
