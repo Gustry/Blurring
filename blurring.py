@@ -23,6 +23,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
+from qgis.gui import QgsMessageBar
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
@@ -30,6 +31,8 @@ from blurringdialog import BlurringDialog
 import os.path
 import random
 import math
+import ntpath
+import time
 
 
 class Blurring:
@@ -63,125 +66,182 @@ class Blurring:
 
         # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(u"&Blurring", self.action)
+        self.iface.addPluginToMenu(u"&Bord", self.action)
         
         #Variables
         self.mapLayerRegistry = QgsMapLayerRegistry.instance()
         
         #Connecteurs
-        QObject.connect(self.dlg.pushButton_calculation, SIGNAL("clicked()"), self.calculation)
+        QObject.connect(self.dlg.pushButton_help, SIGNAL("clicked()"), self.displayHelp)
+        QObject.connect(self.dlg.pushButton_browseFolder, SIGNAL('clicked()'), self.selectFile)
+        QObject.connect(self.dlg.pushButton_ok, SIGNAL("clicked()"), self.compute)
+        QObject.connect(self.dlg.pushButton_cancel, SIGNAL("clicked()"), self.cancel)
+        
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerRemoved(QString)"), self.layerDeleted)
-        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QgsMapLayer)"), self.layerAdded)
-        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layersAdded(QgsMapLayer)"), self.layerAdded)
-        #QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("legendLayersAdded(QList)"), self.layerAdded)
+        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QgsMapLayer*)"), self.layerAdded)
 
     def unload(self):
         # Remove the plugin menu item and icon
         self.iface.removePluginMenu(u"&Blurring", self.action)
         self.iface.removeToolBarIcon(self.action)
 
-    # run method that performs all the real work
-    def run(self):
+    def displayComboBoxLayers(self):
         self.layers = self.iface.legendInterface().layers()
         self.dlg.comboBox_blurredLayer.clear()
-        #Remplissage du menu déroulant
+        self.dlg.progressBar_progression.setValue(0)
+
+        """Remplissage du menu déroulant"""
         for layer in self.layers:
             if layer.LayerType() == 0 and layer.geometryType() == 0 :
                 self.dlg.comboBox_blurredLayer.addItem(layer.name())
                  
         if self.dlg.comboBox_blurredLayer.count() < 1:
-            self.dlg.pushButton_calculation.setEnabled(False)
+            self.dlg.pushButton_ok.setEnabled(False)
         else:
-            self.dlg.pushButton_calculation.setEnabled(True)
-        
-        self.dlg.show()
+            self.dlg.pushButton_ok.setEnabled(True)
 
-    def calculation(self):
+    def run(self):
+        self.displayComboBoxLayers()
+        self.outputFile = ""
+        self.dlg.lineEdit_outputFile.setText("")
+        self.dlg.show()
+        
+        result = self.dlg.exec_()
+        if result == 1:
+            self.calculation()
+
+    def selectFile(self):
+        outputFile = QFileDialog.getSaveFileName(self.dlg, 'Select file','output',"Shapefiles (*.shp)")
+        if outputFile:
+            self.dlg.lineEdit_outputFile.setText(outputFile)
+        else:
+            self.dlg.lineEdit_outputFile.setText('')
+
+    def compute(self):
+                
         """Bar de progression a 0"""
         self.dlg.progressBar_progression.setValue(0)
         
         """Recuperation des champs du formulaire"""
         layerName = self.dlg.comboBox_blurredLayer.currentText()
         radius = self.dlg.spinBox_radius.value()
-        debugPointAlea = self.dlg.checkBox_pointAlea.isChecked()
-        debugPremierBuffer = self.dlg.checkBox_premierBuffer.isChecked()
+        display = self.dlg.checkBox_addToMap.isChecked()
+        selectedFeaturesOnly = self.dlg.checkBox_selectedFeatures.isChecked()
+        fileName = self.dlg.lineEdit_outputFile.text()
+        
+        if fileName == "" and display == False:
+            self.iface.messageBar().pushMessage(self.dlg.tr(u'No file provided, "add resultat to canvas" required'), level=QgsMessageBar.CRITICAL , duration=5)
+            return
+        
+        self.polygonBufferFinalLayer = None
+        self.fileWriter = None
         
         """Recuperation de la couche"""
         layer = self.mapLayerRegistry.mapLayersByName(layerName)[0]
+        fields = layer.pendingFields()
+        crsMapRenderer = self.iface.mapCanvas().mapRenderer().destinationCrs()
+        crsLayer = layer.crs()
+        
+        if crsMapRenderer.mapUnits() != 0 or crsLayer.mapUnits() != 0:
+            self.iface.messageBar().pushMessage(self.dlg.tr(u'The projection of the map or of the layer is not in meters. These parameters should be in meters.'), level=QgsMessageBar.CRITICAL , duration=5)
+            return
 
         """Creation de la couche polygonale"""
-        self.polygonBufferFinalLayer = QgsVectorLayer("Polygon",self.dlg.tr(u"Buffer final " + str(radius)), "memory")
-        self.dataProviderPolygonBufFinalLayer = self.polygonBufferFinalLayer.dataProvider()
-        self.polygonBufferFinalLayer.startEditing()
+
+        if fileName != "":
+            self.fileWriter = QgsVectorFileWriter(fileName, None, fields, QGis.WKBPolygon, crsLayer, "ESRI Shapefile")
+            if self.fileWriter.hasError() != QgsVectorFileWriter.NoError:
+                print "Error when creating shapefile: ", self.fileWriter.hasError()
+        else :
+            self.polygonBufferFinalLayer = QgsVectorLayer("Polygon",self.dlg.tr(u"Final buffer " + str(radius) + " m"), "memory")
+            self.dataProviderPolygonBufFinalLayer = self.polygonBufferFinalLayer.dataProvider()
+            self.dataProviderPolygonBufFinalLayer.addAttributes(list(fields))
+            self.polygonBufferFinalLayer.startEditing()
         
-        """Transfert de la table attributaire"""
-        fields = layer.pendingFields()
-        self.dataProviderPolygonBufFinalLayer.addAttributes(list(fields))
-        
-        """Creation de la couche buffer 1"""
-        if debugPremierBuffer :
-            self.polygonLayer = QgsVectorLayer("Polygon",self.dlg.tr(u"Buffer 1"), "memory")
-            self.dataProviderPolygonLayer = self.polygonLayer.dataProvider()
-        
-        """Creation de la couche point alea"""
-        if debugPointAlea :
-            self.pointAleaLayer = QgsVectorLayer("Point",self.dlg.tr(u"Point Alea"), "memory")
-            self.dataProviderPointAleaLayer = self.pointAleaLayer.dataProvider()
+        """Uniquement entités selectionnées ?"""
+        features = None
+        nbFeatures = None
+        if selectedFeaturesOnly:
+            features = layer.selectedFeatures()
+            nbFeatures = layer.selectedFeatureCount()
+        else:
+            features = layer.getFeatures()
+            nbFeatures = layer.featureCount()
         
         """Iteration sur la couche ponctuelle"""
-        for i,feature in enumerate(layer.getFeatures()):
+        for i,feature in enumerate(features):
             
             """Recuperation de la geom et des attributs"""
             geom = feature.geometry()
             attrs = feature.attributes()
             
-            """Creation du premier buffer"""
-            if debugPremierBuffer :
-                bufferFeature1 = QgsFeature()
-                bufferFeature1.setGeometry(geom.buffer(radius,30))
-                self.polygonLayer.dataProvider().addFeatures([bufferFeature1])
-            
             """Tirage du point aleatoire"""
             teta = math.pi*random.uniform(0, 2)
-            deltaX, deltaY = random.randint(0,radius), random.randint(0,radius)
+            deltaX = random.randint(0,radius)
+            deltaY = random.randint(0,radius)
             randomX = geom.asPoint().x()+ deltaX * math.cos(teta)
             randomY = geom.asPoint().y()+ deltaY * math.sin(teta)
             
             """Creation du point aleatoire"""
             pointAleaGeom = QgsGeometry.fromPoint(QgsPoint(randomX, randomY))
-            if debugPointAlea :
-                pointAleaFeature = QgsFeature()
-                pointAleaFeature.setGeometry(pointAleaGeom)
-                self.pointAleaLayer.dataProvider().addFeatures([pointAleaFeature])
             
             """Creation du buffer final"""
-            bufferGeom2 = pointAleaGeom.buffer(radius,30)
+            bufferGeom2 = pointAleaGeom.buffer(radius,0.5)
             bufferFeature2 = QgsFeature()
             bufferFeature2.setGeometry(bufferGeom2)
             bufferFeature2.setAttributes(attrs)
             
             """Ajout a la couche du buffer2"""
-            self.polygonBufferFinalLayer.dataProvider().addFeatures([bufferFeature2])
+            if fileName != "":
+                self.fileWriter.addFeature(bufferFeature2)
+            else :
+                self.polygonBufferFinalLayer.dataProvider().addFeatures([bufferFeature2])
             
             """Maj de la bar de progression"""
-            percent =int((i+1)*100/layer.featureCount())
+            percent =int((i+1)*100/nbFeatures)
             self.dlg.progressBar_progression.setValue(percent)
         
         """Validation des changements et ajout de la couche à la carte""" 
-        self.polygonBufferFinalLayer.commitChanges()
-        QgsMapLayerRegistry.instance().addMapLayer(self.polygonBufferFinalLayer)
+        if fileName == "":
+            self.polygonBufferFinalLayer.commitChanges()
+        else :
+            del self.fileWriter
         
-        if debugPointAlea :
-            self.pointAleaLayer.commitChanges()
-            QgsMapLayerRegistry.instance().addMapLayer(self.pointAleaLayer)
+        if display:
             
-        if debugPremierBuffer :
-            self.polygonLayer.commitChanges()
-            QgsMapLayerRegistry.instance().addMapLayer(self.polygonLayer)
+            self.settings = QSettings()
+            self.oldDefaultProjection = self.settings.value("/Projections/defaultBehaviour")
+            self.settings.setValue( "/Projections/defaultBehaviour", "useProject")
+            
+            if fileName != "":
+                layerName = ntpath.basename(fileName)
+                self.newlayer = QgsVectorLayer(fileName, layerName,"ogr")
+                self.newlayer.commitChanges()
+                self.newlayer.clearCacheImage()
+                QgsMapLayerRegistry.instance().addMapLayers([self.newlayer])
+            else:
+                QgsMapLayerRegistry.instance().addMapLayer(self.polygonBufferFinalLayer)
+                
+            self.settings.setValue( "/Projections/defaultBehaviour", self.oldDefaultProjection) 
+                   
+        self.dlg.hide()
+        
+        if fileName != "":
+            self.iface.messageBar().pushMessage(self.dlg.tr(u"Successful export in " + layerName), level=QgsMessageBar.INFO , duration=5)
+        else:
+            self.iface.messageBar().pushMessage(self.dlg.tr(u"Succesfully done !"), level=QgsMessageBar.INFO , duration=5)
 
+    def displayHelp(self):
+        msg = self.dlg.tr(u"Plugin QGIS pour le floutage des données ponctuelles. <br /> <b>Bientôt, l'aide !</b>")
+        infoString = QCoreApplication.translate('Blurring', msg)
+        QMessageBox.information(self.dlg,u"Blurring", infoString)
+        
+    def cancel(self):
+        self.dlg.hide()
         
     def layerDeleted(self,idLayer):
-        print idLayer
+        self.displayComboBoxLayers()
         
     def layerAdded(self,idLayer):
-        print idLayer
+        #time.sleep(2)
+        self.displayComboBoxLayers()
