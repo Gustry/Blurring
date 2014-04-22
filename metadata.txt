@@ -11,9 +11,9 @@
 [general]
 name=Blurring
 qgisMinimumVersion=2.0
-description=Blurring data
-version=0.1
-author=TER Géomatique UM2
+description=Plugin to blur point data, such as health personal data
+version=0.2
+author=TER Géomatique UM2 2013
 email=ter-floutage@googlegroups.com
 
 # end of mandatory metadata
@@ -24,15 +24,14 @@ email=ter-floutage@googlegroups.com
 # changelog=
 
 # tags are comma separated with spaces allowed
-tags=
+tags=health, blur, blurring, buffer, floutage
 
-homepage=
-tracker=
-repository=
+homepage=https://bitbucket.org/gustry/blurred
+tracker=https://bitbucket.org/gustry/blurred/issues/
+repository=https://bitbucket.org/gustry/blurred/
 icon=icon.png
 # experimental flag
 experimental=True
 
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
-

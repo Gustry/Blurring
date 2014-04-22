@@ -1,2 +1,0 @@
--maj dynamique du menu deroulant
--utilisation d'un ID de layer

@@ -26,14 +26,22 @@ from qgis.core import *
 from qgis.gui import QgsMessageBar
 # Initialize Qt resources from file resources.py
 import resources
+import PointInLayer
 # Import the code for the dialog
 from blurringdialog import BlurringDialog
 import os.path
+import sys
 import random
 import math
 import ntpath
-import time
+import inspect
 
+from processing.core.Processing import Processing
+from BlurringGeoAlgorithmProvider import BlurringGeoAlgorithmProvider
+cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+
+if cmd_folder not in sys.path:
+    sys.path.insert(0, cmd_folder)
 
 class Blurring:
 
@@ -55,45 +63,94 @@ class Blurring:
 
         # Create the dialog (after translation) and keep reference
         self.dlg = BlurringDialog()
+        self.provider = BlurringGeoAlgorithmProvider()
 
     def initGui(self):
         # Create action that will start plugin configuration
         self.action = QAction(
-            QIcon(":/plugins/blurring/icon.png"),
+            QIcon(":/resources/icon"),
             u"Blurring", self.iface.mainWindow())
         # connect the action to the run method
         self.action.triggered.connect(self.run)
 
         # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(u"&Bord", self.action)
+        self.iface.addPluginToVectorMenu(u"&Blurring", self.action)
         
         #Variables
         self.mapLayerRegistry = QgsMapLayerRegistry.instance()
         
         #Connecteurs
+        QObject.connect(self.dlg.checkBox_useMinNumberEntities, SIGNAL("clicked()"), self.enableMinEntities)
+        QObject.connect(self.dlg.checkBox_envelope, SIGNAL("clicked()"), self.enableEnvelope)
         QObject.connect(self.dlg.pushButton_help, SIGNAL("clicked()"), self.displayHelp)
         QObject.connect(self.dlg.pushButton_browseFolder, SIGNAL('clicked()'), self.selectFile)
         QObject.connect(self.dlg.pushButton_ok, SIGNAL("clicked()"), self.compute)
         QObject.connect(self.dlg.pushButton_cancel, SIGNAL("clicked()"), self.cancel)
+        QObject.connect(self.dlg.pushButton_advanced, SIGNAL("clicked()"), self.advanced)
+        
         
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerRemoved(QString)"), self.layerDeleted)
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QgsMapLayer*)"), self.layerAdded)
+        
+        Processing.addProvider(self.provider, True)
 
     def unload(self):
-        # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(u"&Blurring", self.action)
+        self.iface.removePluginVectorMenu(u"&Blurring", self.action)
         self.iface.removeToolBarIcon(self.action)
+        Processing.removeProvider(self.provider)
+
+    def enableMinEntities(self):
+        if self.dlg.checkBox_useMinNumberEntities.isChecked():
+            self.dlg.spinBox__minEntities.setEnabled(True)
+            self.dlg.comboBox_layerMinEntities.setEnabled(True)
+            self.dlg.spinBox_step.setEnabled(True)
+            self.dlg.label_layer_entities.setEnabled(True)
+            self.dlg.label_nb_entities.setEnabled(True)
+            self.dlg.label_step.setEnabled(True)
+        else:
+            self.dlg.spinBox__minEntities.setEnabled(False)
+            self.dlg.comboBox_layerMinEntities.setEnabled(False)
+            self.dlg.spinBox_step.setEnabled(False)
+            self.dlg.label_layer_entities.setEnabled(False)
+            self.dlg.label_nb_entities.setEnabled(False)
+            self.dlg.label_step.setEnabled(False)
+            
+    def enableEnvelope(self):
+        if self.dlg.checkBox_envelope.isChecked():
+            self.dlg.comboBox_envelope.setEnabled(True)
+        else:
+            self.dlg.comboBox_envelope.setEnabled(False)
+
+    def advanced(self):
+        if self.dlg.pushButton_advanced.text() == "Less options     <<<":
+            self.dlg.resize(355,275)
+            self.dlg.checkBox_envelope.setChecked(False)
+            self.dlg.checkBox_useMinNumberEntities.setChecked(False)
+            self.enableEnvelope()
+            self.enableMinEntities()
+            self.dlg.pushButton_advanced.setText("More options     >>>")
+        else:
+            self.dlg.resize(665, 275)
+            self.dlg.pushButton_advanced.setText("Less options     <<<")
 
     def displayComboBoxLayers(self):
         self.layers = self.iface.legendInterface().layers()
         self.dlg.comboBox_blurredLayer.clear()
+        self.dlg.comboBox_envelope.clear()
+        self.dlg.comboBox_layerMinEntities.clear()
         self.dlg.progressBar_progression.setValue(0)
 
         """Remplissage du menu déroulant"""
         for layer in self.layers:
             if layer.LayerType() == 0 and layer.geometryType() == 0 :
                 self.dlg.comboBox_blurredLayer.addItem(layer.name())
+                
+            if layer.LayerType() == 0 and layer.geometryType() == 2 :
+                self.dlg.comboBox_envelope.addItem(layer.name())
+                
+            if layer.LayerType() == 0:
+                self.dlg.comboBox_layerMinEntities.addItem(layer.name())
                  
         if self.dlg.comboBox_blurredLayer.count() < 1:
             self.dlg.pushButton_ok.setEnabled(False)
@@ -101,23 +158,43 @@ class Blurring:
             self.dlg.pushButton_ok.setEnabled(True)
 
     def run(self):
+        
+        self.dlg.checkBox_useMinNumberEntities.setChecked(False)
+        self.dlg.checkBox_useMinNumberEntities.setEnabled(False)
+        self.enableMinEntities()
+        
+        self.dlg.checkBox_envelope.setEnabled(True)
+        self.dlg.checkBox_envelope.setChecked(False)
+        self.enableEnvelope()
+        
         self.displayComboBoxLayers()
         self.outputFile = ""
         self.dlg.lineEdit_outputFile.setText("")
         self.dlg.show()
-        
-        result = self.dlg.exec_()
-        if result == 1:
-            self.calculation()
 
     def selectFile(self):
-        outputFile = QFileDialog.getSaveFileName(self.dlg, 'Select file','output',"Shapefiles (*.shp)")
+        outputFile = QFileDialog.getSaveFileName(self.dlg, QApplication.translate("Blurring", 'Select file'),'output',"Shapefiles (*.shp)")
         if outputFile:
             self.dlg.lineEdit_outputFile.setText(outputFile)
         else:
             self.dlg.lineEdit_outputFile.setText('')
 
+    def displayPoly(self,geom, name):
+        vl = QgsVectorLayer("Polygon",name, "memory")
+        pr = vl.dataProvider()
+        ft = QgsFeature()
+        ft.setGeometry(geom)
+        pr.addFeatures([ft])
+        vl.updateExtents()
+        QgsMapLayerRegistry.instance().addMapLayer(vl)
+
+
     def compute(self):
+        """ None to advanced parameters"""
+        layerEnvelope = None
+        layerEnvelopeGeom = None
+        layerMinEntities = None
+        nbMinEntities = None
                 
         """Bar de progression a 0"""
         self.dlg.progressBar_progression.setValue(0)
@@ -129,9 +206,22 @@ class Blurring:
         selectedFeaturesOnly = self.dlg.checkBox_selectedFeatures.isChecked()
         fileName = self.dlg.lineEdit_outputFile.text()
         
+        if self.dlg.checkBox_envelope.isChecked():
+            layerEnvelope = self.mapLayerRegistry.mapLayersByName(self.dlg.comboBox_envelope.currentText())[0]
+            layerEnvelope = PointInLayer.PointInLayer(layerEnvelope)
+
+        if self.dlg.checkBox_useMinNumberEntities.isChecked():
+            layerMinEntities = self.mapLayerRegistry.mapLayersByName(self.dlg.comboBox_layerMinEntities.currentText())[0]
+            nbMinEntities = self.dlg.spinBox__minEntities.value()
+        
         if fileName == "" and display == False:
-            self.iface.messageBar().pushMessage(self.dlg.tr(u'No file provided, "add resultat to canvas" required'), level=QgsMessageBar.CRITICAL , duration=5)
+            self.iface.messageBar().pushMessage(QApplication.translate("Blurring", 'No file provided, "add resultat to canvas" required'), level=QgsMessageBar.CRITICAL , duration=5)
             return
+        
+        if display :
+            self.settings = QSettings()
+            self.oldDefaultProjection = self.settings.value("/Projections/defaultBehaviour")
+            self.settings.setValue( "/Projections/defaultBehaviour", "useProject")
         
         self.polygonBufferFinalLayer = None
         self.fileWriter = None
@@ -142,18 +232,21 @@ class Blurring:
         crsMapRenderer = self.iface.mapCanvas().mapRenderer().destinationCrs()
         crsLayer = layer.crs()
         
-        if crsMapRenderer.mapUnits() != 0 or crsLayer.mapUnits() != 0:
-            self.iface.messageBar().pushMessage(self.dlg.tr(u'The projection of the map or of the layer is not in meters. These parameters should be in meters.'), level=QgsMessageBar.CRITICAL , duration=5)
-            return
+        #if crsMapRenderer.mapUnits() != 0 or crsLayer.mapUnits() != 0:
+        #    self.iface.messageBar().pushMessage(QApplication.translate("Blurring",'The projection of the map or of the layer is not in meters. These parameters should be in meters.'), level=QgsMessageBar.CRITICAL , duration=5)
+        #    return
 
         """Creation de la couche polygonale"""
 
         if fileName != "":
             self.fileWriter = QgsVectorFileWriter(fileName, None, fields, QGis.WKBPolygon, crsLayer, "ESRI Shapefile")
             if self.fileWriter.hasError() != QgsVectorFileWriter.NoError:
-                print "Error when creating shapefile: ", self.fileWriter.hasError()
+                self.iface.messageBar().pushMessage(QApplication.translate("Blurring","Error when creating shapefile: ", self.fileWriter.hasError()), level=QgsMessageBar.CRITICAL , duration=5)
+
         else :
-            self.polygonBufferFinalLayer = QgsVectorLayer("Polygon",self.dlg.tr(u"Final buffer " + str(radius) + " m"), "memory")
+            layerName = QApplication.translate("Blurring","Final buffer ")
+            self.polygonBufferFinalLayer = QgsVectorLayer("Polygon",layerName + str(radius) + " m", "memory")
+            self.polygonBufferFinalLayer.setCrs(crsLayer)
             self.dataProviderPolygonBufFinalLayer = self.polygonBufferFinalLayer.dataProvider()
             self.dataProviderPolygonBufFinalLayer.addAttributes(list(fields))
             self.polygonBufferFinalLayer.startEditing()
@@ -176,14 +269,25 @@ class Blurring:
             attrs = feature.attributes()
             
             """Tirage du point aleatoire"""
-            teta = math.pi*random.uniform(0, 2)
-            deltaX = random.randint(0,radius)
-            deltaY = random.randint(0,radius)
-            randomX = geom.asPoint().x()+ deltaX * math.cos(teta)
-            randomY = geom.asPoint().y()+ deltaY * math.sin(teta)
-            
-            """Creation du point aleatoire"""
-            pointAleaGeom = QgsGeometry.fromPoint(QgsPoint(randomX, randomY))
+            pointAleaGeom = None
+            if layerEnvelope != None:
+                parentEntity = layerEnvelope.entityContains(geom)
+                if parentEntity == False:
+                    self.iface.messageBar().pushMessage(QApplication.translate("Blurring", 'Point with id '+ str(feature.id()) + ' is outside of the envelope'), level=QgsMessageBar.CRITICAL , duration=5)
+                    self.dlg.progressBar_progression.setValue(0)
+                    return
+                i = 0
+                while True:
+                    pointAleaGeom = self.randomPointAroundGeomPoint(geom, radius)
+                    if layerEnvelope.contains(pointAleaGeom):
+                        break
+                    else:
+                        i +=1
+                        if i >100:
+                            pointAleaGeom = self.randomPointAroundGeomPoint(geom, 5)
+                            break
+            else:
+                pointAleaGeom = self.randomPointAroundGeomPoint(geom, radius)   
             
             """Creation du buffer final"""
             bufferGeom2 = pointAleaGeom.buffer(radius,0.5)
@@ -207,12 +311,7 @@ class Blurring:
         else :
             del self.fileWriter
         
-        if display:
-            
-            self.settings = QSettings()
-            self.oldDefaultProjection = self.settings.value("/Projections/defaultBehaviour")
-            self.settings.setValue( "/Projections/defaultBehaviour", "useProject")
-            
+        if display:            
             if fileName != "":
                 layerName = ntpath.basename(fileName)
                 self.newlayer = QgsVectorLayer(fileName, layerName,"ogr")
@@ -227,15 +326,22 @@ class Blurring:
         self.dlg.hide()
         
         if fileName != "":
-            self.iface.messageBar().pushMessage(self.dlg.tr(u"Successful export in " + layerName), level=QgsMessageBar.INFO , duration=5)
+            self.iface.messageBar().pushMessage(QApplication.translate("Blurring", "Successful export in " + fileName), level=QgsMessageBar.INFO , duration=5)
         else:
-            self.iface.messageBar().pushMessage(self.dlg.tr(u"Succesfully done !"), level=QgsMessageBar.INFO , duration=5)
+            self.iface.messageBar().pushMessage(QApplication.translate("Blurring", "Succesfully done in memory ! Be careful, it's not saved ! "), level=QgsMessageBar.INFO , duration=5)
+
+    def randomPointAroundGeomPoint(self,point, radius):
+        teta = math.pi*random.uniform(0, 2)
+        deltaX = random.randint(0,radius)
+        deltaY = random.randint(0,radius)
+        randomX = point.asPoint().x()+ deltaX * math.cos(teta)
+        randomY = point.asPoint().y()+ deltaY * math.sin(teta)
+        return QgsGeometry.fromPoint(QgsPoint(randomX, randomY))
 
     def displayHelp(self):
-        msg = self.dlg.tr(u"Plugin QGIS pour le floutage des données ponctuelles. <br /> <b>Bientôt, l'aide !</b>")
-        infoString = QCoreApplication.translate('Blurring', msg)
+        infoString = QCoreApplication.translate('Blurring', u"Plugin to blur point data, such as health personal data<br /><table><tr><td><img src=':/resources/step1' /></td><td>Creating a buffer (radius r)</td></tr><tr><td><img src=':/resources/step2' /></td><td>Random selection of a point in each buffer</td></tr><tr><td><img src=':/resources/step3' /></td><td>Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.</td></tr></table>")
         QMessageBox.information(self.dlg,u"Blurring", infoString)
-        
+                
     def cancel(self):
         self.dlg.hide()
         
@@ -243,5 +349,4 @@ class Blurring:
         self.displayComboBoxLayers()
         
     def layerAdded(self,idLayer):
-        #time.sleep(2)
         self.displayComboBoxLayers()
