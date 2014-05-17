@@ -27,15 +27,12 @@ from PyQt4.QtGui import QIcon
 
 import resources
 
-class BlurringGeoAlgorithmProvider(AlgorithmProvider):
-
-    MY_DUMMY_SETTING = 'MY_DUMMY_SETTING'
+class BlurringAlgorithmProvider(AlgorithmProvider):
 
     def __init__(self):
         AlgorithmProvider.__init__(self)
 
-        # Deactivate provider by default
-        self.activate = False
+        self.activate = True
 
         # Load algorithms
         self.alglist = [BlurringGeoAlgorithm()]
@@ -44,11 +41,9 @@ class BlurringGeoAlgorithmProvider(AlgorithmProvider):
 
     def initializeSettings(self):
         AlgorithmProvider.initializeSettings(self)
-        ProcessingConfig.addSetting(Setting('Blurring', BlurringGeoAlgorithmProvider.MY_DUMMY_SETTING,'Example setting', 'Default value'))
 
     def unload(self):
         AlgorithmProvider.unload(self)
-        ProcessingConfig.removeSetting(BlurringGeoAlgorithmProvider.MY_DUMMY_SETTING)
 
     def getName(self):
         return 'Blurring'
@@ -58,6 +53,6 @@ class BlurringGeoAlgorithmProvider(AlgorithmProvider):
 
     def getIcon(self):
         return QIcon(":/resources/icon")
-
+    
     def _loadAlgorithms(self):
         self.algs = self.alglist

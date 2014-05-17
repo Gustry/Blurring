@@ -23,67 +23,83 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
+import resources
 
 from processing.core.Processing import Processing
 from processing.core.GeoAlgorithm import GeoAlgorithm
 from processing.parameters.ParameterVector import ParameterVector
 from processing.parameters.ParameterNumber import ParameterNumber
+from processing.parameters.ParameterBoolean import ParameterBoolean
 from processing.outputs.OutputVector import OutputVector
 from processing.tools import dataobjects, vector
-
-import random
-import math
+from BlurringAlgorithmCore import BlurringAlgorithmCore
+import LayerIndex
 
 class BlurringGeoAlgorithm(GeoAlgorithm):
 
     OUTPUT_LAYER = 'OUTPUT_LAYER'
     INPUT_LAYER = 'INPUT_LAYER'
-    VALUE_FIELD = 'VALUE_FIELD'
+    RADIUS_FIELD = 'RADIUS_FIELD'
+    RADIUS_EXPORT = 'RADIUS_EXPORT'
+    CENTROID_EXPORT = 'CENTROID_EXPORT'
+    DISTANCE_EXPORT = 'DISTANCE_EXPORT'
+    ENVELOPE_LAYER = 'ENVELOPE_LAYER'
 
     def defineCharacteristics(self):
         self.name = 'Simplest algo (point layer and radius only)'
         self.group = 'Blurring a point layer'
 
         self.addParameter(ParameterVector(self.INPUT_LAYER, 'Point layer',[ParameterVector.VECTOR_TYPE_POINT], False))
-        self.addParameter(ParameterNumber(self.VALUE_FIELD, 'Radius (maps unit)',1,999999999,1000))
+        self.addParameter(ParameterNumber(self.RADIUS_FIELD, 'Radius (maps unit)',1,999999999,1000))
+        self.addParameter(ParameterVector(self.ENVELOPE_LAYER, 'Envelope layer',[ParameterVector.VECTOR_TYPE_POLYGON], True))
+        self.addParameter(ParameterBoolean(self.RADIUS_EXPORT, 'Add the radius to the attribute table',False))
+        self.addParameter(ParameterBoolean(self.CENTROID_EXPORT, 'Add the centroid to the attribute table',False))
+        self.addParameter(ParameterBoolean(self.DISTANCE_EXPORT, 'Add the distance between the inital point and the centroid',False))
 
         self.addOutput(OutputVector(self.OUTPUT_LAYER,'Output layer with selected features'))
+
+    def help(self):
+        return True, "Plugin to blur point data, such as health personal data<br /><table><tr><td><img src=':/resources/step1' /></td><td>Creating a buffer (radius r)</td></tr><tr><td><img src=':/resources/step2' /></td><td>Random selection of a point in each buffer</td></tr><tr><td><img src=':/resources/step3' /></td><td>Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.</td></tr></table>"
 
     def processAlgorithm(self, progress):
 
         inputFilename = self.getParameterValue(self.INPUT_LAYER)
-        radius = self.getParameterValue(self.VALUE_FIELD)
+        radius = self.getParameterValue(self.RADIUS_FIELD)
+        exportRadius = self.getParameterValue(self.RADIUS_EXPORT)
+        exportCentroid = self.getParameterValue(self.CENTROID_EXPORT)
+        exportDistance = self.getParameterValue(self.DISTANCE_EXPORT)
+        envelopeLayerField = self.getParameterValue(self.ENVELOPE_LAYER)
         output = self.getOutputValue(self.OUTPUT_LAYER)
 
         vectorLayer = dataobjects.getObjectFromUri(inputFilename)
+        
+        vectorlayerEnvelopeIndex = None
+        if envelopeLayerField != None:
+            vectorLayerEnvelope = dataobjects.getObjectFromUri(envelopeLayerField)
+            vectorlayerEnvelopeIndex = LayerIndex.LayerIndex(vectorLayerEnvelope)
 
         settings = QSettings()
         systemEncoding = settings.value('/UI/encoding', 'System')
         provider = vectorLayer.dataProvider()
+        fields = provider.fields()
+        
+        if exportRadius:
+            fields.append(QgsField(u"Radius", QVariant.Int))
+        
+        if exportCentroid:
+            fields.append(QgsField(u"X centroid", QVariant.Int))
+            fields.append(QgsField(u"Y centroid", QVariant.Int))
+        
+        if exportDistance:
+            fields.append(QgsField(u"Distance", QVariant.Double))
+        
         writer = QgsVectorFileWriter(output, systemEncoding,
-                                     provider.fields(),
+                                     fields,
                                      QGis.WKBPolygon, provider.crs())
+        
+        algo = BlurringAlgorithmCore.BlurringAlgorithmCore(radius, vectorlayerEnvelopeIndex, exportRadius, exportCentroid, exportDistance)
 
         features = vector.features(vectorLayer)
         for feature in features:
-            
-            geom = feature.geometry()
-            attrs = feature.attributes()
-            
-            """Tirage du point aleatoire"""
-            teta = math.pi*random.uniform(0, 2)
-            deltaX = random.randint(0,radius)
-            deltaY = random.randint(0,radius)
-            randomX = geom.asPoint().x()+ deltaX * math.cos(teta)
-            randomY = geom.asPoint().y()+ deltaY * math.sin(teta)
-            
-            """Creation du point aleatoire"""
-            pointAleaGeom = QgsGeometry.fromPoint(QgsPoint(randomX, randomY))
-            
-            """Creation du buffer final"""
-            bufferGeom2 = pointAleaGeom.buffer(radius,20)
-            bufferFeature2 = QgsFeature()
-            bufferFeature2.setGeometry(bufferGeom2)
-            bufferFeature2.setAttributes(attrs)
-            
-            writer.addFeature(bufferFeature2)
+            feature = algo.blur(feature)
+            writer.addFeature(feature)

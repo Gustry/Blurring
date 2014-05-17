@@ -26,10 +26,9 @@ from qgis.core import *
 from qgis.gui import *
 # Initialize Qt resources from file resources.py
 import resources
-import LayerIndex
+import PointInLayer
 # Import the code for the dialog
 from blurringdialog import BlurringDialog
-from BlurringAlgorithmCore import BlurringAlgorithmCore
 import os.path
 import sys
 import random
@@ -39,8 +38,7 @@ import inspect
 
 from processing.core.Processing import Processing
 from processing.tools.system import *
-from processing.core.GeoAlgorithmExecutionException import GeoAlgorithmExecutionException
-from BlurringAlgorithmProvider import BlurringAlgorithmProvider
+from BlurringGeoAlgorithmProvider import BlurringGeoAlgorithmProvider
 cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
 
 if cmd_folder not in sys.path:
@@ -66,7 +64,7 @@ class Blurring:
 
         # Create the dialog (after translation) and keep reference
         self.dlg = BlurringDialog()
-        self.provider = BlurringAlgorithmProvider()
+        self.provider = BlurringGeoAlgorithmProvider()
 
     def initGui(self):
         # Create action that will start plugin configuration
@@ -84,12 +82,14 @@ class Blurring:
         self.mapLayerRegistry = QgsMapLayerRegistry.instance()
         
         #Connecteurs
+        QObject.connect(self.dlg.checkBox_useMinNumberEntities, SIGNAL("clicked()"), self.enableMinEntities)
         QObject.connect(self.dlg.checkBox_envelope, SIGNAL("clicked()"), self.enableEnvelope)
         QObject.connect(self.dlg.pushButton_help, SIGNAL("clicked()"), self.displayHelp)
         QObject.connect(self.dlg.pushButton_browseFolder, SIGNAL('clicked()'), self.selectFile)
         QObject.connect(self.dlg.pushButton_ok, SIGNAL("clicked()"), self.compute)
         QObject.connect(self.dlg.pushButton_cancel, SIGNAL("clicked()"), self.cancel)
         QObject.connect(self.dlg.pushButton_advanced, SIGNAL("clicked()"), self.advanced)
+        
         
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerRemoved(QString)"), self.layerDeleted)
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QgsMapLayer*)"), self.layerAdded)
@@ -100,6 +100,22 @@ class Blurring:
         self.iface.removePluginVectorMenu(u"&Blurring", self.action)
         self.iface.removeToolBarIcon(self.action)
         Processing.removeProvider(self.provider)
+
+    def enableMinEntities(self):
+        if self.dlg.checkBox_useMinNumberEntities.isChecked():
+            self.dlg.spinBox__minEntities.setEnabled(True)
+            self.dlg.comboBox_layerMinEntities.setEnabled(True)
+            self.dlg.spinBox_step.setEnabled(True)
+            self.dlg.label_layer_entities.setEnabled(True)
+            self.dlg.label_nb_entities.setEnabled(True)
+            self.dlg.label_step.setEnabled(True)
+        else:
+            self.dlg.spinBox__minEntities.setEnabled(False)
+            self.dlg.comboBox_layerMinEntities.setEnabled(False)
+            self.dlg.spinBox_step.setEnabled(False)
+            self.dlg.label_layer_entities.setEnabled(False)
+            self.dlg.label_nb_entities.setEnabled(False)
+            self.dlg.label_step.setEnabled(False)
             
     def enableEnvelope(self):
         if self.dlg.checkBox_envelope.isChecked():
@@ -111,19 +127,19 @@ class Blurring:
         if self.dlg.pushButton_advanced.text() == "Less options     <<<":
             self.dlg.resize(355,275)
             self.dlg.checkBox_envelope.setChecked(False)
+            self.dlg.checkBox_useMinNumberEntities.setChecked(False)
             self.enableEnvelope()
-            self.dlg.checkBox_exportCentroid.setChecked(False)
-            self.dlg.checkBox_exportRadius.setChecked(False)
-            self.dlg.checkBox_exportDistance.setChecked(False)
+            self.enableMinEntities()
             self.dlg.pushButton_advanced.setText("More options     >>>")
         else:
-            self.dlg.resize(690, 275)
+            self.dlg.resize(665, 275)
             self.dlg.pushButton_advanced.setText("Less options     <<<")
 
     def displayComboBoxLayers(self):
         self.layers = self.iface.legendInterface().layers()
         self.dlg.comboBox_blurredLayer.clear()
         self.dlg.comboBox_envelope.clear()
+        self.dlg.comboBox_layerMinEntities.clear()
         self.dlg.progressBar_progression.setValue(0)
 
         """Remplissage du menu déroulant"""
@@ -134,6 +150,8 @@ class Blurring:
                 
                 if layer.geometryType() == 2 :
                     self.dlg.comboBox_envelope.addItem(layer.name())
+                
+                self.dlg.comboBox_layerMinEntities.addItem(layer.name())
                  
         if self.dlg.comboBox_blurredLayer.count() < 1:
             self.dlg.pushButton_ok.setEnabled(False)
@@ -141,7 +159,11 @@ class Blurring:
             self.dlg.pushButton_ok.setEnabled(True)
 
     def run(self):
-            
+        
+        self.dlg.checkBox_useMinNumberEntities.setChecked(False)
+        self.dlg.checkBox_useMinNumberEntities.setEnabled(False)
+        self.enableMinEntities()
+        
         self.dlg.checkBox_envelope.setEnabled(True)
         self.dlg.checkBox_envelope.setChecked(False)
         self.enableEnvelope()
@@ -162,6 +184,7 @@ class Blurring:
         """ None to advanced parameters"""
         self.layerEnvelope = None
         self.layerEnvelopeGeom = None
+        self.layerMinEntities = None
         self.nbMinEntities = None
         self.step = None
                 
@@ -174,20 +197,27 @@ class Blurring:
         display = self.dlg.checkBox_addToMap.isChecked()
         selectedFeaturesOnly = self.dlg.checkBox_selectedFeatures.isChecked()
         self.fileName = self.dlg.lineEdit_outputFile.text()
-        exportRadius = self.dlg.checkBox_exportRadius.isChecked()
-        exportCentroid = self.dlg.checkBox_exportCentroid.isChecked()
-        exportDistance = self.dlg.checkBox_exportDistance.isChecked()
                 
         if self.dlg.checkBox_envelope.isChecked():
             self.layerEnvelope = self.mapLayerRegistry.mapLayersByName(self.dlg.comboBox_envelope.currentText())[0]
-            self.layerEnvelope = LayerIndex.LayerIndex(self.layerEnvelope)
-      
+            self.layerEnvelope = PointInLayer.PointInLayer(self.layerEnvelope)
+
+        '''
+        if self.dlg.checkBox_useMinNumberEntities.isChecked():
+            self.layerMinEntities = self.mapLayerRegistry.mapLayersByName(self.dlg.comboBox_layerMinEntities.currentText())[0]
+            self.nbFeaturesLayerMinEntities = self.layerMinEntities.featureCount()
+            self.layerMinEntities = PointInLayer.PointInLayer(self.layerMinEntities)
+            self.nbMinEntities = self.dlg.spinBox__minEntities.value()
+            self.step = self.dlg.spinBox_step.value()
+        '''
+        
         if self.fileName == "":
             if display == False:
                 self.iface.messageBar().pushMessage(QApplication.translate("Blurring", 'No file provided, "add resultat to canvas" required'), level=QgsMessageBar.CRITICAL , duration=5)
                 return
             
             self.fileName = getTempFilenameInTempFolder("blurring.shp")
+        
         
         if display :
             self.settings = QSettings()
@@ -200,67 +230,167 @@ class Blurring:
         """Recuperation de la couche"""
         layer = self.mapLayerRegistry.mapLayersByName(layerName)[0]
         fields = layer.pendingFields()
-        if exportRadius:
-            fields.append(QgsField(u"Radius", QVariant.Int))
-        if exportCentroid:
-            fields.append(QgsField(u"X centroid", QVariant.Int))
-            fields.append(QgsField(u"Y centroid", QVariant.Int))
-        if exportDistance:
-            fields.append(QgsField(u"Distance", QVariant.Double))
         crsMapRenderer = self.iface.mapCanvas().mapRenderer().destinationCrs()
         crsLayer = layer.crs()
         
-        if crsMapRenderer.mapUnits() != 0 or crsLayer.mapUnits() != 0:
-            self.iface.messageBar().pushMessage(QApplication.translate("Blurring",'The projection of the map or of the layer is not in meters. These parameters should be in meters.'), level=QgsMessageBar.WARNING , duration=5)
-       
+        #if crsMapRenderer.mapUnits() != 0 or crsLayer.mapUnits() != 0:
+        #    self.iface.messageBar().pushMessage(QApplication.translate("Blurring",'The projection of the map or of the layer is not in meters. These parameters should be in meters.'), level=QgsMessageBar.CRITICAL , duration=5)
+        #    return
+
+        """Creation de la couche polygonale"""
+        
+        """
+        self.fileWriter = QgsVectorFileWriter(self.fileName, None, fields, QGis.WKBPolygon, crsLayer, "ESRI Shapefile")
+        if self.fileWriter.hasError() != QgsVectorFileWriter.NoError:
+            self.iface.messageBar().pushMessage(QApplication.translate("Blurring","Error when creating shapefile: ", self.fileWriter.hasError()), level=QgsMessageBar.CRITICAL , duration=5)
+        """
+        
         """Uniquement entités selectionnées ?"""
         features = None
         self.nbFeatures = None
               
-        if selectedFeaturesOnly:
-            features = layer.selectedFeatures()
-            self.nbFeatures = layer.selectedFeatureCount()
-        else:
-            features = layer.getFeatures()
-            self.nbFeatures = layer.featureCount()
-        
-        """Creation de la couche polygonale"""    
-        self.fileWriter = QgsVectorFileWriter(self.fileName, None, fields, QGis.WKBPolygon, crsLayer, "ESRI Shapefile")
-        if self.fileWriter.hasError() != QgsVectorFileWriter.NoError:
-            self.iface.messageBar().pushMessage(QApplication.translate("Blurring","Error when creating shapefile: ", self.fileWriter.hasError()), level=QgsMessageBar.CRITICAL , duration=5)
+        algoOk = False
+        self.lastFeature = -1
+        self.oldResultFileName = None
+        print "Debut iteration"
+        while not algoOk:
+            if selectedFeaturesOnly:
+                features = layer.selectedFeatures()
+                self.nbFeatures = layer.selectedFeatureCount()
+            else:
+                features = layer.getFeatures()
+                self.nbFeatures = layer.featureCount()
+                
+            self.fileWriter = QgsVectorFileWriter(self.fileName, None, fields, QGis.WKBPolygon, crsLayer, "ESRI Shapefile")
+            if self.fileWriter.hasError() != QgsVectorFileWriter.NoError:
+                self.iface.messageBar().pushMessage(QApplication.translate("Blurring","Error when creating shapefile: ", self.fileWriter.hasError()), level=QgsMessageBar.CRITICAL , duration=5)
             
-        
-        algo = BlurringAlgorithmCore.BlurringAlgorithmCore(self.radius, self.layerEnvelope, exportRadius, exportCentroid, exportDistance)
-        
-        for j,feature in enumerate(features):
-            try:
-                feature = algo.blur(feature)
-            except GeoAlgorithmExecutionException as e:
-                self.iface.messageBar().pushMessage(e.msg, level=QgsMessageBar.CRITICAL , duration=5)
-                return
-            self.fileWriter.addFeature(feature)
-        
-            """Maj de la bar de progression"""
-            percent =int((j+1)*100/self.nbFeatures)
-            self.dlg.progressBar_progression.setValue(percent)
-        
+            algoOk = self.algo(self.radius, features)
             
-        """Validation des changements et ajout de la couche à la carte""" 
-        del self.fileWriter
+            """Validation des changements et ajout de la couche à la carte""" 
+            del self.fileWriter
             
+            print "fin de l'algo, nb : " + str(self.lastFeature)
+            if self.lastFeature > 0 and not algoOk:
+                """Creation d'un shapefile avec les points aléatoires"""
+                self.oldResultFileName = getTempFilenameInTempFolder("blurring-old.shp")
+                print self.oldResultFileName
+                self.oldResultFileWriter = QgsVectorFileWriter(self.oldResultFileName, None, fields, QGis.WKBPoint, crsLayer, "ESRI Shapefile")
+                
+                """Recuperation des features buffers"""
+                layerName = ntpath.basename(self.fileName)
+                self.newlayer = QgsVectorLayer(self.fileName, layerName,"ogr")
+                oldFeatures = self.newlayer.getFeatures()
+                print "premiere reututilisation de " + str(self.newlayer.featureCount())
+                for oldFeature in oldFeatures:
+                    geom = oldFeature.geometry()
+                    attrs = oldFeature.attributes()
+                    ptAlea = QgsFeature()
+                    ptAlea.setGeometry(geom.centroid())
+                    ptAlea.setAttributes(attrs)
+                    self.oldResultFileWriter.addFeature(ptAlea)
+                
+                del self.oldResultFileWriter
+                
+        
+        if self.layerMinEntities != None:
+                    QMessageBox.information(self.iface.mainWindow(),"Result","Min radius : " + str(self.dlg.spinBox_radius.value()) + 
+                                            "<br /> Min feature : " + str(self.nbMinEntities) +
+                                            "<br /> Step : " + str(self.step) + 
+                                            "<br /> ----------" +
+                                            "<br /> Final radius : " + str(self.radius) +
+                                            "<br /> With " + str(self.radius - self.step) + " : " + str(self.lastFeature + 1) + "/" + str(self.nbFeatures))
+        
         if display:            
             layerName = ntpath.basename(self.fileName)
             self.newlayer = QgsVectorLayer(self.fileName, layerName,"ogr")
             self.newlayer.commitChanges()
             self.newlayer.clearCacheImage()
             QgsMapLayerRegistry.instance().addMapLayers([self.newlayer])
- 
+
+                
             self.settings.setValue( "/Projections/defaultBehaviour", self.oldDefaultProjection) 
                    
         self.dlg.hide()
         
         self.iface.messageBar().pushMessage(QApplication.translate("Blurring", "Successful export in " + self.fileName), level=QgsMessageBar.INFO , duration=5)
 
+
+    def algo(self,radius,features):
+        """if self.oldResultFileName != None:
+            oldResultFileName = ntpath.basename(self.oldResultFileName)
+            oldResultlayer = QgsVectorLayer(self.oldResultFileName, oldResultFileName,"ogr")
+            oldFeatures = oldResultlayer.getFeatures()
+            print "deuxieme reutilisation de " + str(oldResultlayer.featureCount())
+            for oldFeature in oldFeatures:
+                print oldFeature
+                geom = oldFeature.geometry()
+                attrs = oldFeature.attributes()
+                
+                bufferGeom2 = geom.buffer(radius,0.5)
+                bufferFeature2 = QgsFeature()
+                bufferFeature2.setGeometry(bufferGeom2)
+                bufferFeature2.setAttributes(attrs)
+                self.fileWriter.addFeature(bufferFeature2)
+        """
+        """Iteration sur les features"""
+        for j,feature in enumerate(features):
+            if True:
+            #if self.oldResultFileName != None or j > self.lastFeature:
+                print "j  " + str(j)
+                """Recuperation de la geom et des attributs"""
+                geom = feature.geometry()
+                attrs = feature.attributes()
+                
+                """Tirage du point aleatoire"""
+                pointAleaGeom = None
+    
+                if self.layerEnvelope != None:
+                    i = 0
+                    while True:
+                        pointAleaGeom = self.randomPointAroundGeomPoint(geom, radius)
+                        if self.layerEnvelope.contains(pointAleaGeom):
+                            break
+                        else:
+                            i +=1
+                            if i > 100:
+                                print "max 100"
+                                pointAleaGeom = self.randomPointAroundGeomPoint(geom, 5)
+                                break
+                else:
+                    pointAleaGeom = self.randomPointAroundGeomPoint(geom, radius)
+                
+                """Creation du buffer final"""
+                bufferGeom2 = pointAleaGeom.buffer(radius,0.5)
+                bufferFeature2 = QgsFeature()
+                bufferFeature2.setGeometry(bufferGeom2)
+                bufferFeature2.setAttributes(attrs)
+                if self.layerMinEntities != None:
+                    if j >= self.lastFeature:
+                        print "count feature " + str(j)
+                        if not self.layerMinEntities.countIntersection(bufferFeature2.geometry(), self.nbMinEntities):
+                            self.radius = radius + self.step
+                            print self.radius
+                            self.lastFeature = j
+                            print "Nb ID : " + str(self.lastFeature)
+                            return False
+                          
+                """Ajout a la couche du buffer2"""
+                self.fileWriter.addFeature(bufferFeature2)
+        
+        """Maj de la bar de progression"""
+        percent =int((j+1)*100/self.nbFeatures)
+        self.dlg.progressBar_progression.setValue(percent)
+        
+        return True
+
+    def randomPointAroundGeomPoint(self,point, radius):
+        teta = math.pi*random.uniform(0, 2)
+        deltaX = random.randint(0,radius)
+        deltaY = random.randint(0,radius)
+        randomX = point.asPoint().x()+ deltaX * math.cos(teta)
+        randomY = point.asPoint().y()+ deltaY * math.sin(teta)
+        return QgsGeometry.fromPoint(QgsPoint(randomX, randomY))
 
     def displayHelp(self):
         infoString = QCoreApplication.translate('Blurring', u"Plugin to blur point data, such as health personal data<br /><table><tr><td><img src=':/resources/step1' /></td><td>Creating a buffer (radius r)</td></tr><tr><td><img src=':/resources/step2' /></td><td>Random selection of a point in each buffer</td></tr><tr><td><img src=':/resources/step3' /></td><td>Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.</td></tr></table>")
