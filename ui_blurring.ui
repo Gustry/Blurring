@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>355</width>
-    <height>283</height>
+    <width>416</width>
+    <height>364</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -28,9 +28,9 @@
   <widget class="QFrame" name="frame_2">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>430</x>
      <y>160</y>
-     <width>321</width>
+     <width>351</width>
      <height>61</height>
     </rect>
    </property>
@@ -45,7 +45,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>301</width>
+      <width>331</width>
       <height>41</height>
      </rect>
     </property>
@@ -67,9 +67,9 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>10</y>
-     <width>351</width>
-     <height>261</height>
+     <y>0</y>
+     <width>411</width>
+     <height>361</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -83,8 +83,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>336</width>
-      <height>239</height>
+      <width>391</width>
+      <height>341</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -193,7 +193,7 @@
      <item>
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Output : (if left empty, memory)</string>
+        <string>Output : (if left empty, it will go in a temporary file)</string>
        </property>
       </widget>
      </item>
@@ -219,11 +219,18 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButton_help">
+       <property name="text">
+        <string>How my data is blurred ?</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QPushButton" name="pushButton_help">
+        <widget class="QPushButton" name="pushButton_ok">
          <property name="text">
-          <string>How my data is blurred ?</string>
+          <string>OK</string>
          </property>
         </widget>
        </item>
@@ -239,13 +246,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_ok">
-         <property name="text">
-          <string>OK</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_cancel">
@@ -272,9 +272,9 @@
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>430</x>
      <y>10</y>
-     <width>321</width>
+     <width>351</width>
      <height>41</height>
     </rect>
    </property>
@@ -301,9 +301,9 @@
   <widget class="QFrame" name="frame_4">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>430</x>
      <y>60</y>
-     <width>321</width>
+     <width>351</width>
      <height>41</height>
     </rect>
    </property>
@@ -330,9 +330,9 @@
   <widget class="QFrame" name="frame_5">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>430</x>
      <y>110</y>
-     <width>321</width>
+     <width>351</width>
      <height>41</height>
     </rect>
    </property>

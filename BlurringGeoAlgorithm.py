@@ -46,8 +46,8 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
     ENVELOPE_LAYER = 'ENVELOPE_LAYER'
 
     def defineCharacteristics(self):
-        self.name = 'Simplest algo (point layer and radius only)'
-        self.group = 'Blurring a point layer'
+        self.name = QApplication.translate("Blurring", 'Blurring a point layer')
+        self.group = QApplication.translate("Blurring", 'Blurring a point layer')
 
         self.addParameter(ParameterVector(self.INPUT_LAYER, 'Point layer',[ParameterVector.VECTOR_TYPE_POINT], False))
         self.addParameter(ParameterNumber(self.RADIUS_FIELD, 'Radius (maps unit)',1,999999999,1000))
@@ -59,7 +59,7 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
         self.addOutput(OutputVector(self.OUTPUT_LAYER,'Output layer with selected features'))
 
     def help(self):
-        return True, "Plugin to blur point data, such as health personal data<br /><table><tr><td><img src=':/resources/step1' /></td><td>Creating a buffer (radius r)</td></tr><tr><td><img src=':/resources/step2' /></td><td>Random selection of a point in each buffer</td></tr><tr><td><img src=':/resources/step3' /></td><td>Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.</td></tr></table>"
+        return True, QApplication.translate("Blurring", 'For more explanations, go to the vector\'s menu then "Blurring" -> "How my data is blurred ?"<br />')
 
     def processAlgorithm(self, progress):
 

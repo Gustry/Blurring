@@ -21,6 +21,7 @@
 """
 
 from qgis.core import QgsGeometry,QgsPoint, QgsFeature
+from PyQt4.QtGui import QApplication
 from processing.core.GeoAlgorithmExecutionException import GeoAlgorithmExecutionException
 import random, math
 from math import sqrt
@@ -44,7 +45,8 @@ class BlurringAlgorithmCore:
         if self.__polygonEnvelope != None:
             
             if not self.__polygonEnvelope.contains(geom):
-                raise GeoAlgorithmExecutionException, "Point number "+ str(feature.id()) +" is outside the envelope"
+                msg = QApplication.translate("Blurring", 'Point number')+ str(feature.id()) + QApplication.translate("Blurring", 'is outside the envelope')
+                raise GeoAlgorithmExecutionException, msg
             
             radius = self.__radius
             i = 0

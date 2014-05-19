@@ -36,6 +36,7 @@ import random
 import math
 import ntpath
 import inspect
+import re
 
 from processing.core.Processing import Processing
 from processing.tools.system import *
@@ -83,6 +84,11 @@ class Blurring:
         #Variables
         self.mapLayerRegistry = QgsMapLayerRegistry.instance()
         
+        #Height and widht
+        self.minWidth = 416
+        self.maxWidth = 786
+        self.height = 364
+        
         #Connecteurs
         QObject.connect(self.dlg.checkBox_envelope, SIGNAL("clicked()"), self.enableEnvelope)
         QObject.connect(self.dlg.pushButton_help, SIGNAL("clicked()"), self.displayHelp)
@@ -108,17 +114,17 @@ class Blurring:
             self.dlg.comboBox_envelope.setEnabled(False)
 
     def advanced(self):
-        if self.dlg.pushButton_advanced.text() == "Less options     <<<":
-            self.dlg.resize(355,275)
+        if re.search('<<<', self.dlg.pushButton_advanced.text()):
+            self.dlg.resize(self.minWidth,self.height)
             self.dlg.checkBox_envelope.setChecked(False)
             self.enableEnvelope()
             self.dlg.checkBox_exportCentroid.setChecked(False)
             self.dlg.checkBox_exportRadius.setChecked(False)
             self.dlg.checkBox_exportDistance.setChecked(False)
-            self.dlg.pushButton_advanced.setText("More options     >>>")
+            self.dlg.pushButton_advanced.setText(QApplication.translate("Blurring", 'More options     >>>'))
         else:
-            self.dlg.resize(690, 275)
-            self.dlg.pushButton_advanced.setText("Less options     <<<")
+            self.dlg.resize(self.maxWidth, self.height)
+            self.dlg.pushButton_advanced.setText(QApplication.translate("Blurring", 'Less options     <<<'))
 
     def displayComboBoxLayers(self):
         self.layers = self.iface.legendInterface().layers()
@@ -263,7 +269,7 @@ class Blurring:
 
 
     def displayHelp(self):
-        infoString = QCoreApplication.translate('Blurring', u"Plugin to blur point data, such as health personal data<br /><table><tr><td><img src=':/resources/step1' /></td><td>Creating a buffer (radius r)</td></tr><tr><td><img src=':/resources/step2' /></td><td>Random selection of a point in each buffer</td></tr><tr><td><img src=':/resources/step3' /></td><td>Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.</td></tr></table>")
+        infoString = QCoreApplication.translate('Blurring', u"Plugin to blur point data, such as health personal data<br /><table><tr><td><img src=':/resources/step1' /></td><td>Creating a buffer (radius r)</td></tr><tr><td><img src=':/resources/step2' /></td><td>Random selection of a point in each buffer</td></tr><tr><td><img src=':/resources/step3' /></td><td>Creating a buffer around the new point with the same radius. The initial point is at a maximal distance r of the centroid of the buffer.</td></tr></table> The envelope layer will force the algorithm to have an intersection between the centroid and this layer.")
         QMessageBox.information(self.dlg,u"Blurring", infoString)
                 
     def cancel(self):
