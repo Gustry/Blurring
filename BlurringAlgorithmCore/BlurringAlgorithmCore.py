@@ -45,7 +45,7 @@ class BlurringAlgorithmCore:
         if self.__polygonEnvelope != None:
             
             if not self.__polygonEnvelope.contains(geom):
-                msg = QApplication.translate("Blurring", 'Point number')+ str(feature.id()) + QApplication.translate("Blurring", 'is outside the envelope')
+                msg = QApplication.translate("Blurring", 'Point number ')+ str(feature.id()) + QApplication.translate("Blurring", 'is outside the envelope')
                 raise GeoAlgorithmExecutionException, msg
             
             radius = self.__radius
@@ -90,10 +90,9 @@ class BlurringAlgorithmCore:
     def __randomPointAroundGeomPoint(self,point,radius):
         """Tirage du point aleatoire"""
         teta = math.pi*random.uniform(0, 2)
-        deltaX = random.randint(0,radius)
-        deltaY = random.randint(0,radius)
-        randomX = point.asPoint().x()+ deltaX * math.cos(teta)
-        randomY = point.asPoint().y()+ deltaY * math.sin(teta)
+        r = random.randint(0,radius)
+        randomX = point.asPoint().x()+ (r * math.cos(teta))
+        randomY = point.asPoint().y()+ (r * math.sin(teta))
         return QgsGeometry.fromPoint(QgsPoint(randomX, randomY))
     
     def __trunc(self,f, n):

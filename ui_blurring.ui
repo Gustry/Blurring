@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>416</width>
-    <height>364</height>
+    <height>367</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,7 @@
    <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Blurring</string>
+   <string notr="true">Blurring</string>
   </property>
   <widget class="QFrame" name="frame_2">
    <property name="geometry">
@@ -33,6 +33,12 @@
      <width>351</width>
      <height>61</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
@@ -191,16 +197,29 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Output : (if left empty, it will go in a temporary file)</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLineEdit" name="lineEdit_outputFile"/>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Output :</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outputFile">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="inputMask">
+          <string/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>Save to temporary file</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_browseFolder">
@@ -221,7 +240,7 @@
      <item>
       <widget class="QPushButton" name="pushButton_help">
        <property name="text">
-        <string>How my data is blurred ?</string>
+        <string>How my data are blurred ?</string>
        </property>
       </widget>
      </item>
@@ -278,6 +297,12 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
    </property>
@@ -307,6 +332,12 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
    </property>
@@ -335,6 +366,12 @@
      <width>351</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
