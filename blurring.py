@@ -269,7 +269,7 @@ class Blurring:
 
 
     def displayHelp(self):
-        infoString = QCoreApplication.translate('Blurring', u"Plugin to blur point data, such as health personal data<br /><table><tr><td><img src=':/resources/step1' /></td><td>Creating a buffer (radius r)</td></tr><tr><td><img src=':/resources/step2' /></td><td>Random selection of a point in each buffer</td></tr><tr><td><img src=':/resources/step3' /></td><td>Creating a buffer around the new point with the same radius. The initial point is at a maximal distance r of the centroid of the buffer.</td></tr></table> The envelope layer will force the algorithm to have an intersection between the centroid and this layer.")
+        infoString = QCoreApplication.translate('Blurring', u"<b>Plugin to blur point data, such as health personal data</b></br><br /><img src=':/resources/algo' /><br />1 : Creating a buffer (radius r)<br />2 : Random selection of a point in each buffer<br />3 : Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.<br />4:Deleting the random point and the first buffer<br /><br />The envelope layer will force the algorithm to have an intersection between the centroid and this layer. This is like a mask.")
         QMessageBox.information(self.dlg,u"Blurring", infoString)
                 
     def cancel(self):

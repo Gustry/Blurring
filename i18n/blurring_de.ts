@@ -3,7 +3,7 @@
 <context>
     <name>Blurring</name>
     <message>
-        <location filename="ui_blurring.py" line="185"/>
+        <location filename="ui_blurring.py" line="205"/>
         <source>More options     &gt;&gt;&gt;</source>
         <translation>Mehr Optionen     &gt;&gt;&gt;</translation>
     </message>
@@ -30,50 +30,50 @@
     <message>
         <location filename="blurring.py" line="273"/>
         <source>Plugin to blur point data, such as health personal data&lt;br /&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step1&apos; /&gt;&lt;/td&gt;&lt;td&gt;Creating a buffer (radius r)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step2&apos; /&gt;&lt;/td&gt;&lt;td&gt;Random selection of a point in each buffer&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step3&apos; /&gt;&lt;/td&gt;&lt;td&gt;Creating a buffer around the new point with the same radius. The initial point is at a maximal distance r of the centroid of the buffer.&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt; The envelope layer will force the algorithm to have an intersection between the centroid and this layer.</source>
-        <translation>Plugin um unschärfe Punktdaten, wie lokalisiert Gesundheitsdaten&lt;br /&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step1&apos; /&gt;&lt;/td&gt;&lt;td&gt;Schaffung eines Fläche Puffer (Radius r)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step2&apos; /&gt;&lt;/td&gt;&lt;td&gt;Zufällige Auswahl eines Punkts in jedem Fläche Puffer&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step3&apos; /&gt;&lt;/td&gt;&lt;td&gt;Erstellen einer Fläche Puffer in den neuen Punkt mit dem gleichen Radius. Ausgangspunkt ist in einem maximalen Abstand r vom Zentrum des Fläche Puffers.&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt; Die Maskenschicht wird der Algorithmus dazu zu zwingen, ein Schnittpunkt zwischen dem Zentrum und der Schicht.</translation>
+        <translation type="obsolete">Plugin um unschärfe Punktdaten, wie lokalisiert Gesundheitsdaten&lt;br /&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step1&apos; /&gt;&lt;/td&gt;&lt;td&gt;Schaffung eines Fläche Puffer (Radius r)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step2&apos; /&gt;&lt;/td&gt;&lt;td&gt;Zufällige Auswahl eines Punkts in jedem Fläche Puffer&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;img src=&apos;:/resources/step3&apos; /&gt;&lt;/td&gt;&lt;td&gt;Erstellen einer Fläche Puffer in den neuen Punkt mit dem gleichen Radius. Ausgangspunkt ist in einem maximalen Abstand r vom Zentrum des Fläche Puffers.&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt; Die Maskenschicht wird der Algorithmus dazu zu zwingen, ein Schnittpunkt zwischen dem Zentrum und der Schicht.</translation>
     </message>
     <message>
         <location filename="ui_blurring.py" line="172"/>
         <source>Blurring</source>
-        <translation>Unschärfe</translation>
+        <translation type="obsolete">Unschärfe</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="173"/>
+        <location filename="ui_blurring.py" line="193"/>
         <source>Use envelope</source>
         <translation>Verwenden Sie die Maske</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="174"/>
+        <location filename="ui_blurring.py" line="194"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Layer which will be blurred&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Diese Schicht wird unscharf&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="175"/>
+        <location filename="ui_blurring.py" line="195"/>
         <source>Point layer</source>
         <translation>Punktlayer</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="176"/>
+        <location filename="ui_blurring.py" line="196"/>
         <source>Layer which will be blurred</source>
         <translation>Diese Schicht wird unscharf</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="179"/>
+        <location filename="ui_blurring.py" line="199"/>
         <source>Maximum radius</source>
         <translation>Maximale Radius</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="178"/>
+        <location filename="ui_blurring.py" line="198"/>
         <source>Radius (map&apos;s unit)</source>
         <translation>Radius (Kartes Einheit)</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="180"/>
+        <location filename="ui_blurring.py" line="200"/>
         <source>Use only selected features</source>
         <translation>Verwenden Sie nur ausgewählte Merkmale</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="181"/>
+        <location filename="ui_blurring.py" line="201"/>
         <source>Add result to canvas</source>
         <translation>Fügen Sie die Ergebnis zum der Karte</translation>
     </message>
@@ -83,7 +83,7 @@
         <translation type="obsolete">Ausgang : (ob leer, wird es in einer temporären Datei zu gehen)</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="184"/>
+        <location filename="ui_blurring.py" line="204"/>
         <source>Browse</source>
         <translation>Durchsuchen</translation>
     </message>
@@ -93,27 +93,27 @@
         <translation type="obsolete">Wie unscharf sind meine Daten ?</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="187"/>
+        <location filename="ui_blurring.py" line="207"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="188"/>
+        <location filename="ui_blurring.py" line="208"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="189"/>
+        <location filename="ui_blurring.py" line="209"/>
         <source>Add the radius to the attribute table</source>
         <translation>Fügen Sie den Radius auf der Attributtabelle</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="190"/>
+        <location filename="ui_blurring.py" line="210"/>
         <source>Add X and Y of centroid to the attribute table</source>
         <translation>Hinzufügen Sie X und Y in der Zentrum auf der Attributtabelle</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="191"/>
+        <location filename="ui_blurring.py" line="211"/>
         <source>Add distance between initial point and centroid</source>
         <translation>Abstand zwischen Zentrum und Anfangspunkt</translation>
     </message>
@@ -133,23 +133,28 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="182"/>
+        <location filename="ui_blurring.py" line="202"/>
         <source>Output :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="183"/>
+        <location filename="ui_blurring.py" line="203"/>
         <source>Save to temporary file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="186"/>
+        <location filename="ui_blurring.py" line="206"/>
         <source>How my data are blurred ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="BlurringAlgorithmCore/BlurringAlgorithmCore.py" line="48"/>
         <source>Point number </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="blurring.py" line="273"/>
+        <source>&lt;b&gt;Plugin to blur point data, such as health personal data&lt;/b&gt;&lt;/br&gt;&lt;br /&gt;&lt;img src=&apos;:/resources/algo&apos; /&gt;&lt;br /&gt;1 : Creating a buffer (radius r)&lt;br /&gt;2 : Random selection of a point in each buffer&lt;br /&gt;3 : Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.&lt;br /&gt;4:Deleting the random point and the first buffer&lt;br /&gt;&lt;br /&gt;The envelope layer will force the algorithm to have an intersection between the centroid and this layer. This is like a mask.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
