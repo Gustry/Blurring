@@ -31,7 +31,7 @@
     <message>
         <location filename="ui_blurring.py" line="185"/>
         <source>Add result to canvas</source>
-        <translation>Ajouter le résultats à la carte</translation>
+        <translation>Ajouter le résultat à la carte</translation>
     </message>
     <message>
         <location filename="ui_blurring.py" line="188"/>
@@ -156,7 +156,7 @@
     <message>
         <location filename="ui_blurring.py" line="190"/>
         <source>How my data are blurred ?</source>
-        <translation>Comment mes données sont floutées ?</translation>
+        <translation>Comment mes données sont-elles floutées ?</translation>
     </message>
     <message>
         <location filename="BlurringAlgorithmCore/BlurringAlgorithmCore.py" line="51"/>

@@ -85,9 +85,9 @@ class Blurring:
         self.mapLayerRegistry = QgsMapLayerRegistry.instance()
         
         #Height and widht
-        self.minWidth = 424
+        self.minWidth = 425
         self.maxWidth = 786
-        self.height = 375
+        self.height = 357
         
         #Connectors
         QObject.connect(self.dlg.checkBox_envelope, SIGNAL("clicked()"), self.enableEnvelope)
@@ -124,7 +124,6 @@ class Blurring:
             self.enableEnvelope()
             self.dlg.checkBox_exportCentroid.setChecked(False)
             self.dlg.checkBox_exportRadius.setChecked(False)
-            self.dlg.checkBox_exportDistance.setChecked(False)
             self.dlg.pushButton_advanced.setText(QApplication.translate("Blurring", 'More options     >>>'))
         else:
             self.dlg.resize(self.maxWidth, self.height)
@@ -186,7 +185,6 @@ class Blurring:
         self.fileName = self.dlg.lineEdit_outputFile.text()
         exportRadius = self.dlg.checkBox_exportRadius.isChecked()
         exportCentroid = self.dlg.checkBox_exportCentroid.isChecked()
-        exportDistance = self.dlg.checkBox_exportDistance.isChecked()
                 
         if self.dlg.checkBox_envelope.isChecked():
             self.layerEnvelope = self.mapLayerRegistry.mapLayersByName(self.dlg.comboBox_envelope.currentText())[0]
@@ -215,8 +213,6 @@ class Blurring:
         if exportCentroid:
             fields.append(QgsField(u"X centroid", QVariant.Int))
             fields.append(QgsField(u"Y centroid", QVariant.Int))
-        if exportDistance:
-            fields.append(QgsField(u"Distance", QVariant.Double))
         crsMapRenderer = self.iface.mapCanvas().mapRenderer().destinationCrs()
         crsLayer = layer.crs()
         
@@ -240,7 +236,7 @@ class Blurring:
             self.iface.messageBar().pushMessage(QApplication.translate("Blurring","Error when creating shapefile: ", self.fileWriter.hasError()), level=QgsMessageBar.CRITICAL , duration=5)
             
         """Creating the algorithm with radius ..."""
-        algo = BlurringAlgorithmCore.BlurringAlgorithmCore(self.radius, self.layerEnvelope, exportRadius, exportCentroid, exportDistance)
+        algo = BlurringAlgorithmCore.BlurringAlgorithmCore(self.radius, self.layerEnvelope, exportRadius, exportCentroid, False)
         
         for j,feature in enumerate(features):
             try:

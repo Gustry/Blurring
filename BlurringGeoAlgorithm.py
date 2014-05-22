@@ -56,7 +56,6 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
         self.addParameter(ParameterVector(self.ENVELOPE_LAYER, 'Envelope layer',[ParameterVector.VECTOR_TYPE_POLYGON], True))
         self.addParameter(ParameterBoolean(self.RADIUS_EXPORT, 'Add the radius to the attribute table',False))
         self.addParameter(ParameterBoolean(self.CENTROID_EXPORT, 'Add the centroid to the attribute table',False))
-        self.addParameter(ParameterBoolean(self.DISTANCE_EXPORT, 'Add the distance between the inital point and the centroid',False))
 
         self.addOutput(OutputVector(self.OUTPUT_LAYER,'Output layer with selected features'))
 
@@ -70,7 +69,6 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
         radius = self.getParameterValue(self.RADIUS_FIELD)
         exportRadius = self.getParameterValue(self.RADIUS_EXPORT)
         exportCentroid = self.getParameterValue(self.CENTROID_EXPORT)
-        exportDistance = self.getParameterValue(self.DISTANCE_EXPORT)
         envelopeLayerField = self.getParameterValue(self.ENVELOPE_LAYER)
         output = self.getOutputValue(self.OUTPUT_LAYER)
 
@@ -94,15 +92,12 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
             fields.append(QgsField(u"X centroid", QVariant.Int))
             fields.append(QgsField(u"Y centroid", QVariant.Int))
         
-        if exportDistance:
-            fields.append(QgsField(u"Distance", QVariant.Double))
-        
         writer = QgsVectorFileWriter(output, systemEncoding,
                                      fields,
                                      QGis.WKBPolygon, provider.crs())
         
         #Creating a algorithm with all these paramaters
-        algo = BlurringAlgorithmCore.BlurringAlgorithmCore(radius, vectorlayerEnvelopeIndex, exportRadius, exportCentroid, exportDistance)
+        algo = BlurringAlgorithmCore.BlurringAlgorithmCore(radius, vectorlayerEnvelopeIndex, exportRadius, exportCentroid, False)
 
         features = vector.features(vectorLayer)
         for feature in features:
