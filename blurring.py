@@ -85,11 +85,11 @@ class Blurring:
         self.mapLayerRegistry = QgsMapLayerRegistry.instance()
         
         #Height and widht
-        self.minWidth = 416
+        self.minWidth = 424
         self.maxWidth = 786
-        self.height = 364
+        self.height = 375
         
-        #Connecteurs
+        #Connectors
         QObject.connect(self.dlg.checkBox_envelope, SIGNAL("clicked()"), self.enableEnvelope)
         QObject.connect(self.dlg.pushButton_help, SIGNAL("clicked()"), self.displayHelp)
         QObject.connect(self.dlg.pushButton_browseFolder, SIGNAL('clicked()'), self.selectFile)
@@ -100,19 +100,23 @@ class Blurring:
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerRemoved(QString)"), self.layerDeleted)
         QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QgsMapLayer*)"), self.layerAdded)
         
+        #Add the plugin to processing
         Processing.addProvider(self.provider, True)
 
     def unload(self):
         self.iface.removePluginVectorMenu(u"&Blurring", self.action)
         self.iface.removeToolBarIcon(self.action)
         Processing.removeProvider(self.provider)
-            
+
+    
+    #If the envelope(mask) is checked      
     def enableEnvelope(self):
         if self.dlg.checkBox_envelope.isChecked():
             self.dlg.comboBox_envelope.setEnabled(True)
         else:
             self.dlg.comboBox_envelope.setEnabled(False)
 
+    #If the advanced button is clicked
     def advanced(self):
         if re.search('<<<', self.dlg.pushButton_advanced.text()):
             self.dlg.resize(self.minWidth,self.height)
@@ -171,10 +175,10 @@ class Blurring:
         self.nbMinEntities = None
         self.step = None
                 
-        """Bar de progression a 0"""
+        """progress bar set 0"""
         self.dlg.progressBar_progression.setValue(0)
         
-        """Recuperation des champs du formulaire"""
+        """Get all the fields"""
         layerName = self.dlg.comboBox_blurredLayer.currentText()
         self.radius = self.dlg.spinBox_radius.value()
         display = self.dlg.checkBox_addToMap.isChecked()
@@ -203,7 +207,7 @@ class Blurring:
         self.polygonBufferFinalLayer = None
         self.fileWriter = None
         
-        """Recuperation de la couche"""
+        """get the layer"""
         layer = self.mapLayerRegistry.mapLayersByName(layerName)[0]
         fields = layer.pendingFields()
         if exportRadius:
@@ -219,7 +223,7 @@ class Blurring:
         if crsMapRenderer.mapUnits() != 0 or crsLayer.mapUnits() != 0:
             self.iface.messageBar().pushMessage(QApplication.translate("Blurring",'The projection of the map or of the layer is not in meters. These parameters should be in meters.'), level=QgsMessageBar.WARNING , duration=5)
        
-        """Uniquement entités selectionnées ?"""
+        """Use only selected features ?"""
         features = None
         self.nbFeatures = None
               
@@ -230,12 +234,12 @@ class Blurring:
             features = layer.getFeatures()
             self.nbFeatures = layer.featureCount()
         
-        """Creation de la couche polygonale"""    
+        """Creating the output shapefile"""    
         self.fileWriter = QgsVectorFileWriter(self.fileName, None, fields, QGis.WKBPolygon, crsLayer, "ESRI Shapefile")
         if self.fileWriter.hasError() != QgsVectorFileWriter.NoError:
             self.iface.messageBar().pushMessage(QApplication.translate("Blurring","Error when creating shapefile: ", self.fileWriter.hasError()), level=QgsMessageBar.CRITICAL , duration=5)
             
-        
+        """Creating the algorithm with radius ..."""
         algo = BlurringAlgorithmCore.BlurringAlgorithmCore(self.radius, self.layerEnvelope, exportRadius, exportCentroid, exportDistance)
         
         for j,feature in enumerate(features):
@@ -246,12 +250,12 @@ class Blurring:
                 return
             self.fileWriter.addFeature(feature)
         
-            """Maj de la bar de progression"""
+            """Update progress bar"""
             percent =int((j+1)*100/self.nbFeatures)
             self.dlg.progressBar_progression.setValue(percent)
         
             
-        """Validation des changements et ajout de la couche à la carte""" 
+        """Write all features in the file""" 
         del self.fileWriter
             
         if display:            

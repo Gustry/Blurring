@@ -12,7 +12,7 @@
 name=Blurring
 qgisMinimumVersion=2.0
 description=Plugin to blur point data, such as health personal data
-version=0.3
+version=0.2
 author=TER Géomatique UM2 2013
 email=ter-floutage@googlegroups.com
 

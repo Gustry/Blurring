@@ -35,6 +35,8 @@ from processing.tools import dataobjects, vector
 from BlurringAlgorithmCore import BlurringAlgorithmCore
 import LayerIndex
 
+"""QGIS Processing"""
+
 class BlurringGeoAlgorithm(GeoAlgorithm):
 
     OUTPUT_LAYER = 'OUTPUT_LAYER'
@@ -46,8 +48,8 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
     ENVELOPE_LAYER = 'ENVELOPE_LAYER'
 
     def defineCharacteristics(self):
-        self.name = QApplication.translate("Blurring", 'Blurring a point layer')
-        self.group = QApplication.translate("Blurring", 'Blurring a point layer')
+        self.name = "Blurring a point layer"
+        self.group = "Blurring a point layer"
 
         self.addParameter(ParameterVector(self.INPUT_LAYER, 'Point layer',[ParameterVector.VECTOR_TYPE_POINT], False))
         self.addParameter(ParameterNumber(self.RADIUS_FIELD, 'Radius (maps unit)',1,999999999,1000))
@@ -63,6 +65,7 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
 
     def processAlgorithm(self, progress):
 
+        #Get parameters
         inputFilename = self.getParameterValue(self.INPUT_LAYER)
         radius = self.getParameterValue(self.RADIUS_FIELD)
         exportRadius = self.getParameterValue(self.RADIUS_EXPORT)
@@ -73,6 +76,7 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
 
         vectorLayer = dataobjects.getObjectFromUri(inputFilename)
         
+        #If we use a mask, envelope
         vectorlayerEnvelopeIndex = None
         if envelopeLayerField != None:
             vectorLayerEnvelope = dataobjects.getObjectFromUri(envelopeLayerField)
@@ -97,6 +101,7 @@ class BlurringGeoAlgorithm(GeoAlgorithm):
                                      fields,
                                      QGis.WKBPolygon, provider.crs())
         
+        #Creating a algorithm with all these paramaters
         algo = BlurringAlgorithmCore.BlurringAlgorithmCore(radius, vectorlayerEnvelopeIndex, exportRadius, exportCentroid, exportDistance)
 
         features = vector.features(vectorLayer)

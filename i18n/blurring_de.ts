@@ -3,27 +3,27 @@
 <context>
     <name>Blurring</name>
     <message>
-        <location filename="ui_blurring.py" line="205"/>
+        <location filename="ui_blurring.py" line="189"/>
         <source>More options     &gt;&gt;&gt;</source>
         <translation>Mehr Optionen     &gt;&gt;&gt;</translation>
     </message>
     <message>
-        <location filename="blurring.py" line="127"/>
+        <location filename="blurring.py" line="131"/>
         <source>Less options     &lt;&lt;&lt;</source>
         <translation>Wenig Optionen     &lt;&lt;&lt;</translation>
     </message>
     <message>
-        <location filename="blurring.py" line="162"/>
+        <location filename="blurring.py" line="166"/>
         <source>Select file</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="blurring.py" line="194"/>
+        <location filename="blurring.py" line="198"/>
         <source>No file provided, &quot;add resultat to canvas&quot; required</source>
         <translation>Keine Ausgabedatei bereitgestellt, &quot; fügen Sie die Ergebnis zum der Karte &quot; ist zwingend</translation>
     </message>
     <message>
-        <location filename="blurring.py" line="221"/>
+        <location filename="blurring.py" line="225"/>
         <source>The projection of the map or of the layer is not in meters. These parameters should be in meters.</source>
         <translation>Die Projektion der Karte oder der Schicht ist nicht in Metern. Es wird empfohlen, dass diese Parametern sollten in Metern sein.</translation>
     </message>
@@ -38,42 +38,42 @@
         <translation type="obsolete">Unschärfe</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="193"/>
+        <location filename="ui_blurring.py" line="177"/>
         <source>Use envelope</source>
         <translation>Verwenden Sie die Maske</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="194"/>
+        <location filename="ui_blurring.py" line="178"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Layer which will be blurred&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Diese Schicht wird unscharf&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="195"/>
+        <location filename="ui_blurring.py" line="179"/>
         <source>Point layer</source>
         <translation>Punktlayer</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="196"/>
+        <location filename="ui_blurring.py" line="180"/>
         <source>Layer which will be blurred</source>
         <translation>Diese Schicht wird unscharf</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="199"/>
+        <location filename="ui_blurring.py" line="183"/>
         <source>Maximum radius</source>
         <translation>Maximale Radius</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="198"/>
+        <location filename="ui_blurring.py" line="182"/>
         <source>Radius (map&apos;s unit)</source>
         <translation>Radius (Kartes Einheit)</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="200"/>
+        <location filename="ui_blurring.py" line="184"/>
         <source>Use only selected features</source>
         <translation>Verwenden Sie nur ausgewählte Merkmale</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="201"/>
+        <location filename="ui_blurring.py" line="185"/>
         <source>Add result to canvas</source>
         <translation>Fügen Sie die Ergebnis zum der Karte</translation>
     </message>
@@ -83,7 +83,7 @@
         <translation type="obsolete">Ausgang : (ob leer, wird es in einer temporären Datei zu gehen)</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="204"/>
+        <location filename="ui_blurring.py" line="188"/>
         <source>Browse</source>
         <translation>Durchsuchen</translation>
     </message>
@@ -93,68 +93,88 @@
         <translation type="obsolete">Wie unscharf sind meine Daten ?</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="207"/>
+        <location filename="ui_blurring.py" line="191"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="208"/>
+        <location filename="ui_blurring.py" line="192"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="ui_blurring.py" line="209"/>
         <source>Add the radius to the attribute table</source>
-        <translation>Fügen Sie den Radius auf der Attributtabelle</translation>
+        <translation type="obsolete">Fügen Sie den Radius auf der Attributtabelle</translation>
     </message>
     <message>
         <location filename="ui_blurring.py" line="210"/>
         <source>Add X and Y of centroid to the attribute table</source>
-        <translation>Hinzufügen Sie X und Y in der Zentrum auf der Attributtabelle</translation>
+        <translation type="obsolete">Hinzufügen Sie X und Y in der Zentrum auf der Attributtabelle</translation>
     </message>
     <message>
         <location filename="ui_blurring.py" line="211"/>
         <source>Add distance between initial point and centroid</source>
-        <translation>Abstand zwischen Zentrum und Anfangspunkt</translation>
+        <translation type="obsolete">Abstand zwischen Zentrum und Anfangspunkt</translation>
     </message>
     <message>
-        <location filename="BlurringGeoAlgorithm.py" line="50"/>
+        <location filename="BlurringGeoAlgorithm.py" line="52"/>
         <source>Blurring a point layer</source>
         <translation>Unschärfe einen Punktlayer</translation>
     </message>
     <message>
-        <location filename="BlurringGeoAlgorithm.py" line="62"/>
+        <location filename="BlurringGeoAlgorithm.py" line="64"/>
         <source>For more explanations, go to the vector&apos;s menu then &quot;Blurring&quot; -&gt; &quot;How my data is blurred ?&quot;&lt;br /&gt;</source>
         <translation>Für weitere Erläuterungen, gehen Sie zum Vektor Menü dann « Unschärfe » → &quot; Wie unscharf sind meine Daten ? &quot;&lt;br /&gt;</translation>
     </message>
     <message>
-        <location filename="BlurringAlgorithmCore/BlurringAlgorithmCore.py" line="48"/>
+        <location filename="BlurringAlgorithmCore/BlurringAlgorithmCore.py" line="51"/>
         <source>is outside the envelope</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="202"/>
+        <location filename="ui_blurring.py" line="186"/>
         <source>Output :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="203"/>
+        <location filename="ui_blurring.py" line="187"/>
         <source>Save to temporary file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_blurring.py" line="206"/>
+        <location filename="ui_blurring.py" line="190"/>
         <source>How my data are blurred ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BlurringAlgorithmCore/BlurringAlgorithmCore.py" line="48"/>
+        <location filename="BlurringAlgorithmCore/BlurringAlgorithmCore.py" line="51"/>
         <source>Point number </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="blurring.py" line="273"/>
+        <location filename="blurring.py" line="277"/>
         <source>&lt;b&gt;Plugin to blur point data, such as health personal data&lt;/b&gt;&lt;/br&gt;&lt;br /&gt;&lt;img src=&apos;:/resources/algo&apos; /&gt;&lt;br /&gt;1 : Creating a buffer (radius r)&lt;br /&gt;2 : Random selection of a point in each buffer&lt;br /&gt;3 : Creating a buffer around the new point with the same radius. The initial point is at a maximal distance 2r of the centroid of the buffer.&lt;br /&gt;4:Deleting the random point and the first buffer&lt;br /&gt;&lt;br /&gt;The envelope layer will force the algorithm to have an intersection between the centroid and this layer. This is like a mask.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_blurring.py" line="194"/>
+        <source>the radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_blurring.py" line="195"/>
+        <source>X and Y of centroid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_blurring.py" line="196"/>
+        <source>the random radius (distance)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_blurring.py" line="193"/>
+        <source>Add to the attribute table :</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

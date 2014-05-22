@@ -27,6 +27,8 @@ from PyQt4.QtGui import QIcon
 
 import resources
 
+"""QGIS Processing"""
+
 class BlurringAlgorithmProvider(AlgorithmProvider):
 
     def __init__(self):

@@ -23,6 +23,8 @@
 from qgis.core import QgsGeometry,QgsFeatureRequest, QgsSpatialIndex
 from processing.tools import vector
 
+"""Class to know if an intersection exist between a QgsGeometry and a QgsVectorLayer"""
+
 class LayerIndex:
     
     def __init__(self, layer):
@@ -33,6 +35,7 @@ class LayerIndex:
             self.__index.insertFeature(ft)
         
     def contains(self, point):
+        """Return true if the point intersects the layer"""
         intersects = self.__index.intersects(point.boundingBox())
         for i in intersects:
             request = QgsFeatureRequest().setFilterFid(i)
@@ -43,6 +46,7 @@ class LayerIndex:
         return False
     
     def countIntersection(self,bufferGeom,nb):
+        """Return true if the buffer intersects enough entities"""
         count = 0
         intersects = self.__index.intersects(bufferGeom.boundingBox())
         for i in intersects:

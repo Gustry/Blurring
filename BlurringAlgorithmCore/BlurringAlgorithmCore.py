@@ -26,6 +26,8 @@ from processing.core.GeoAlgorithmExecutionException import GeoAlgorithmExecution
 import random, math
 from math import sqrt
 
+"""Blurring's algorithm"""
+
 class BlurringAlgorithmCore:
     
     def __init__(self,radius, polygonEnvelope,addRadiusToAttributes, addCentroidToAttributes, addDistanceToAttributes):
@@ -41,9 +43,10 @@ class BlurringAlgorithmCore:
         attrs = feature.attributes()
         pointAleaGeom = None
         
-        """Creation du point aleatoire"""
+        #If we use a mask
         if self.__polygonEnvelope != None:
             
+            #We have to be sure that every intial point intersect the layer
             if not self.__polygonEnvelope.contains(geom):
                 msg = QApplication.translate("Blurring", 'Point number ')+ str(feature.id()) + QApplication.translate("Blurring", 'is outside the envelope')
                 raise GeoAlgorithmExecutionException, msg
@@ -56,6 +59,7 @@ class BlurringAlgorithmCore:
                     break
                 else:
                     i +=1
+                    #after i increment, we reduce the first buffer
                     if i == 100:
                         radius = int(radius * 0.5)
                     elif i == 150:
@@ -68,7 +72,7 @@ class BlurringAlgorithmCore:
         else:
             pointAleaGeom = self.__randomPointAroundGeomPoint(geom, self.__radius)
         
-        """Creation du buffer final"""
+        """Creating the second buffer"""
         bufferGeom = pointAleaGeom.buffer(self.__radius,20)
         bufferFeature = QgsFeature()
         bufferFeature.setGeometry(bufferGeom)
@@ -88,7 +92,7 @@ class BlurringAlgorithmCore:
     
     
     def __randomPointAroundGeomPoint(self,point,radius):
-        """Tirage du point aleatoire"""
+        """Creating a random point"""
         teta = math.pi*random.uniform(0, 2)
         r = random.randint(0,radius)
         randomX = point.asPoint().x()+ (r * math.cos(teta))

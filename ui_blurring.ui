@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
-    <height>367</height>
+    <width>424</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
    <property name="geometry">
     <rect>
      <x>430</x>
-     <y>160</y>
+     <y>150</y>
      <width>351</width>
      <height>61</height>
     </rect>
@@ -72,8 +72,8 @@
   <widget class="QFrame" name="frame_3">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>10</x>
+     <y>10</y>
      <width>411</width>
      <height>361</height>
     </rect>
@@ -294,7 +294,7 @@
      <x>430</x>
      <y>10</y>
      <width>351</width>
-     <height>41</height>
+     <height>131</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -309,88 +309,46 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QCheckBox" name="checkBox_exportRadius">
+   <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>10</y>
-      <width>251</width>
+      <width>231</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Add the radius to the attribute table</string>
+     <string>Add to the attribute table :</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QFrame" name="frame_4">
-   <property name="geometry">
-    <rect>
-     <x>430</x>
-     <y>60</y>
-     <width>351</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QCheckBox" name="checkBox_exportCentroid">
+   <widget class="QSplitter" name="splitter">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>291</width>
-      <height>21</height>
+      <y>40</y>
+      <width>188</width>
+      <height>71</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Add X and Y of centroid to the attribute table</string>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
     </property>
-   </widget>
-  </widget>
-  <widget class="QFrame" name="frame_5">
-   <property name="geometry">
-    <rect>
-     <x>430</x>
-     <y>110</y>
-     <width>351</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QCheckBox" name="checkBox_exportDistance">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>301</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add distance between initial point and centroid</string>
-    </property>
+    <widget class="QCheckBox" name="checkBox_exportRadius">
+     <property name="text">
+      <string>the radius</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_exportCentroid">
+     <property name="text">
+      <string>X and Y of centroid</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_exportDistance">
+     <property name="text">
+      <string>the random radius (distance)</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
