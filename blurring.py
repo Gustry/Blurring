@@ -84,21 +84,16 @@ class Blurring:
         #Variables
         self.mapLayerRegistry = QgsMapLayerRegistry.instance()
         
-        #Height and widht
-        self.minWidth = 425
-        self.maxWidth = 786
-        self.height = 357
-        
         #Connectors
-        QObject.connect(self.dlg.checkBox_envelope, SIGNAL("clicked()"), self.enableEnvelope)
-        QObject.connect(self.dlg.pushButton_help, SIGNAL("clicked()"), self.displayHelp)
-        QObject.connect(self.dlg.pushButton_browseFolder, SIGNAL('clicked()'), self.selectFile)
-        QObject.connect(self.dlg.pushButton_ok, SIGNAL("clicked()"), self.compute)
-        QObject.connect(self.dlg.pushButton_cancel, SIGNAL("clicked()"), self.cancel)
-        QObject.connect(self.dlg.pushButton_advanced, SIGNAL("clicked()"), self.advanced)
-        
-        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerRemoved(QString)"), self.layerDeleted)
-        QObject.connect(QgsMapLayerRegistry.instance(), SIGNAL("layerWasAdded(QgsMapLayer*)"), self.layerAdded)
+        self.dlg.checkBox_envelope.clicked.connect(self.enableEnvelope)
+        self.dlg.pushButton_help.clicked.connect(self.displayHelp)
+        self.dlg.pushButton_browseFolder.clicked.connect(self.selectFile)
+        self.dlg.pushButton_ok.clicked.connect(self.compute)
+        self.dlg.pushButton_cancel.clicked.connect(self.cancel)
+        self.dlg.buttonBox_stats.button(QDialogButtonBox.Ok).clicked.connect(self.runStats)
+        self.dlg.buttonBox_stats.button(QDialogButtonBox.Cancel).clicked.connect(self.cancel)
+        self.mapLayerRegistry.layerRemoved.connect(self.layerDeleted)
+        self.mapLayerRegistry.layerWasAdded.connect(self.layerAdded)
         
         #Add the plugin to processing
         Processing.addProvider(self.provider, True)
@@ -107,7 +102,6 @@ class Blurring:
         self.iface.removePluginVectorMenu(u"&Blurring", self.action)
         self.iface.removeToolBarIcon(self.action)
         Processing.removeProvider(self.provider)
-
     
     #If the envelope(mask) is checked      
     def enableEnvelope(self):
@@ -116,41 +110,37 @@ class Blurring:
         else:
             self.dlg.comboBox_envelope.setEnabled(False)
 
-    #If the advanced button is clicked
-    def advanced(self):
-        if re.search('<<<', self.dlg.pushButton_advanced.text()):
-            self.dlg.resize(self.minWidth,self.height)
-            self.dlg.checkBox_envelope.setChecked(False)
-            self.enableEnvelope()
-            self.dlg.checkBox_exportCentroid.setChecked(False)
-            self.dlg.checkBox_exportRadius.setChecked(False)
-            self.dlg.pushButton_advanced.setText(QApplication.translate("Blurring", 'More options     >>>'))
-        else:
-            self.dlg.resize(self.maxWidth, self.height)
-            self.dlg.pushButton_advanced.setText(QApplication.translate("Blurring", 'Less options     <<<'))
-
     def displayComboBoxLayers(self):
         self.layers = self.iface.legendInterface().layers()
         self.dlg.comboBox_blurredLayer.clear()
         self.dlg.comboBox_envelope.clear()
+        self.dlg.comboBox_layer_statistics.clear()
+        self.dlg.comboBox_layerAlreadyBlurred.clear()
         self.dlg.progressBar_progression.setValue(0)
 
         """Remplissage du menu déroulant"""
         for layer in self.layers:
             if layer.type() == 0 :
+                self.dlg.comboBox_layer_statistics.addItem(layer.name())
                 if layer.geometryType() == 0 :
                     self.dlg.comboBox_blurredLayer.addItem(layer.name())
                 
                 if layer.geometryType() == 2 :
+                    self.dlg.comboBox_layerAlreadyBlurred.addItem(layer.name())
                     self.dlg.comboBox_envelope.addItem(layer.name())
                  
         if self.dlg.comboBox_blurredLayer.count() < 1:
             self.dlg.pushButton_ok.setEnabled(False)
         else:
             self.dlg.pushButton_ok.setEnabled(True)
+            
+        self.dlg.comboBox_blurredLayer.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLength)
+        self.dlg.comboBox_layer_statistics.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLength)
 
     def run(self):
-            
+        
+        #SetupUI
+        self.dlg.groupBox_advanced.setCollapsed(True)
         self.dlg.checkBox_envelope.setEnabled(True)
         self.dlg.checkBox_envelope.setChecked(False)
         self.enableEnvelope()
@@ -166,6 +156,53 @@ class Blurring:
             self.dlg.lineEdit_outputFile.setText(outputFile)
         else:
             self.dlg.lineEdit_outputFile.setText('')
+
+    def runStats(self):
+        if self.dlg.comboBox_layerAlreadyBlurred.currentText() == self.dlg.comboBox_layer_statistics.currentText():
+            return False
+        
+        if self.dlg.comboBox_layerAlreadyBlurred.currentText() == "" or self.dlg.comboBox_layer_statistics.currentText() == "":
+            return False
+        
+        layerAlreadyBlurred = self.dlg.comboBox_layerAlreadyBlurred.currentText()
+        layerAlreadyBlurred = self.mapLayerRegistry.mapLayersByName(layerAlreadyBlurred)[0]
+        featuresAlreadyBlurred = {feature.id(): feature for (feature) in layerAlreadyBlurred.getFeatures()}
+        
+        layerStats = self.dlg.comboBox_layer_statistics.currentText()
+        layerStats = self.mapLayerRegistry.mapLayersByName(layerStats)[0]
+        featuresStats = {feature.id(): feature for (feature) in layerStats.getFeatures()}
+        
+        print "index"
+        index = QgsSpatialIndex()
+        for f in featuresStats.values():
+            index.insertFeature(f)
+        
+        
+        tab = []
+        print "parcours"
+        # Loop each feature in the layer again and get only the features that are going to touch.
+        for i,feature in enumerate(featuresAlreadyBlurred.values()):
+            # Get the ids of all the features in the index that are within
+            # the bounding box of the current feature because these are the ones
+            # that will be touching.
+            count = 0
+            ids = index.intersects(feature.geometry().boundingBox())
+            for id in ids:
+                f = featuresStats[id]
+                if f.geometry().intersects(feature.geometry()):
+                    count += 1
+            tab.append(count)
+        
+        print "sortie"
+        tab.sort()
+        print tab
+        
+        import matplotlib.pyplot as plt
+        plt.hist(tab)
+        plt.title("Distribution")
+        plt.xlabel("Nombre dentites")
+        plt.ylabel("Frequency")
+        plt.show()
 
     def compute(self):
         """ None to advanced parameters"""
@@ -259,6 +296,7 @@ class Blurring:
             self.newlayer = QgsVectorLayer(self.fileName, layerName,"ogr")
             self.newlayer.commitChanges()
             self.newlayer.clearCacheImage()
+            self.newlayer.dataProvider().createSpatialIndex()
             QgsMapLayerRegistry.instance().addMapLayers([self.newlayer])
  
             self.settings.setValue( "/Projections/defaultBehaviour", self.oldDefaultProjection) 
