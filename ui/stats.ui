@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
-    <height>619</height>
+    <width>931</width>
+    <height>728</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,17 @@
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::ExpandingFieldsGrow</enum>
      </property>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButton_refreshLayers">
+       <property name="text">
+        <string>Refresh layers</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../plugins/Blurring/resources.qrc">
+         <normaloff>:/plugins/Blurring/resources/refresh.png</normaloff>:/plugins/Blurring/resources/refresh.png</iconset>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -38,17 +49,6 @@
      </item>
      <item row="2" column="1">
       <widget class="QComboBox" name="comboBox_statsLayer"/>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="pushButton_refreshLayers">
-       <property name="text">
-        <string>Refresh layers</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../plugins/Blurring/resources.qrc">
-         <normaloff>:/plugins/Blurring/resources/refresh.png</normaloff>:/plugins/Blurring/resources/refresh.png</iconset>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -81,21 +81,28 @@
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="layout_plot"/>
-   </item>
-   <item>
-    <widget class="QTableWidget" name="tableWidget">
-     <column>
-      <property name="text">
-       <string/>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Value</string>
-      </property>
-     </column>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QTableWidget" name="tableWidget">
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Parameter</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Value</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="layout_plot"/>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

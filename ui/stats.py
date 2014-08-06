@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'stats.ui'
 #
-# Created: Wed Aug  6 15:36:49 2014
+# Created: Wed Aug  6 16:17:59 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,12 +26,18 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(367, 619)
+        Form.resize(931, 728)
         self.verticalLayout = QtGui.QVBoxLayout(Form)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.formLayout = QtGui.QFormLayout()
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
+        self.pushButton_refreshLayers = QtGui.QPushButton(Form)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/refresh.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_refreshLayers.setIcon(icon)
+        self.pushButton_refreshLayers.setObjectName(_fromUtf8("pushButton_refreshLayers"))
+        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.pushButton_refreshLayers)
         self.label = QtGui.QLabel(Form)
         self.label.setObjectName(_fromUtf8("label"))
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label)
@@ -44,12 +50,6 @@ class Ui_Form(object):
         self.comboBox_statsLayer = QtGui.QComboBox(Form)
         self.comboBox_statsLayer.setObjectName(_fromUtf8("comboBox_statsLayer"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.comboBox_statsLayer)
-        self.pushButton_refreshLayers = QtGui.QPushButton(Form)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/refresh.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_refreshLayers.setIcon(icon)
-        self.pushButton_refreshLayers.setObjectName(_fromUtf8("pushButton_refreshLayers"))
-        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.pushButton_refreshLayers)
         self.verticalLayout.addLayout(self.formLayout)
         self.buttonBox_stats = QtGui.QDialogButtonBox(Form)
         self.buttonBox_stats.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
@@ -67,9 +67,8 @@ class Ui_Form(object):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName(_fromUtf8("line"))
         self.verticalLayout.addWidget(self.line)
-        self.layout_plot = QtGui.QVBoxLayout()
-        self.layout_plot.setObjectName(_fromUtf8("layout_plot"))
-        self.verticalLayout.addLayout(self.layout_plot)
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.tableWidget = QtGui.QTableWidget(Form)
         self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
         self.tableWidget.setColumnCount(2)
@@ -78,17 +77,24 @@ class Ui_Form(object):
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(1, item)
-        self.verticalLayout.addWidget(self.tableWidget)
+        self.tableWidget.verticalHeader().setVisible(False)
+        self.horizontalLayout.addWidget(self.tableWidget)
+        self.layout_plot = QtGui.QVBoxLayout()
+        self.layout_plot.setObjectName(_fromUtf8("layout_plot"))
+        self.horizontalLayout.addLayout(self.layout_plot)
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
+        self.pushButton_refreshLayers.setText(_translate("Form", "Refresh layers", None))
         self.label.setText(_translate("Form", "Blurred layer", None))
         self.label_2.setText(_translate("Form", "Stats layer", None))
-        self.pushButton_refreshLayers.setText(_translate("Form", "Refresh layers", None))
         self.label_progressStats.setText(_translate("Form", "progress", None))
+        item = self.tableWidget.horizontalHeaderItem(0)
+        item.setText(_translate("Form", "Parameter", None))
         item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("Form", "Value", None))
 

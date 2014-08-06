@@ -37,6 +37,7 @@ class StatsWidget(QWidget, Ui_Form):
         super(StatsWidget, self).__init__()
         self.setupUi(self)
         self.fillComboxboxLayers()
+        self.label_progressStats.setText("")
         
         self.pushButton_refreshLayers.clicked.connect(self.fillComboxboxLayers)
         self.buttonBox_stats.button(QDialogButtonBox.Ok).clicked.connect(self.runStats)
@@ -70,19 +71,14 @@ class StatsWidget(QWidget, Ui_Form):
     def plot(self,data):
         # create an axis
         ax = self.figure.add_subplot(111)
-
         # discards the old graph
         ax.hold(False)
-
         # plot data
         ax.plot(data, '*-')
-
         # refresh canvas
         self.canvas.draw()
 
     def runStats(self):
-        
-        print "ok"
         self.progressBar_stats.setValue(0)
         self.label_progressStats.setText("")
         QApplication.processEvents()
@@ -131,8 +127,6 @@ class StatsWidget(QWidget, Ui_Form):
         tab.sort()
         print tab
         
-        self.tableWidget.setColumnCount(2)
-        self.tableWidget.setHorizontalHeaderLabels(['Parameter','Values'])
         self.tableWidget.setRowCount(3)
         
         self.tableWidget.setItem(0, 0, QTableWidgetItem(str("Min")))
@@ -147,6 +141,7 @@ class StatsWidget(QWidget, Ui_Form):
         nb = tab[-1]
         self.tableWidget.setItem(2, 1, QTableWidgetItem(str(nb)))
         
+        self.tableWidget.resizeRowsToContents()
         self.plot(tab)
         
         
