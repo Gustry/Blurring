@@ -37,6 +37,7 @@ class BlurWidget(QWidget, Ui_Form):
     def __init__(self, parent=None):
         super(BlurWidget, self).__init__()
         self.setupUi(self)
+        self.fillComboxboxLayers()
         
         self.label_progress.setText('')
         self.checkBox_envelope.setChecked(False)

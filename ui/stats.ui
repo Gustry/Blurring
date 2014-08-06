@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>478</width>
-    <height>686</height>
+    <width>367</width>
+    <height>619</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,32 +16,60 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::ExpandingFieldsGrow</enum>
+     </property>
+     <item row="1" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Blurred layer</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="1" column="1">
       <widget class="QComboBox" name="comboBox_blurredLayer"/>
      </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Stats layer</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="comboBox_stats"/>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="comboBox_statsLayer"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButton_refreshLayers">
+       <property name="text">
+        <string>Refresh layers</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../plugins/Blurring/resources.qrc">
+         <normaloff>:/plugins/Blurring/resources/refresh.png</normaloff>:/plugins/Blurring/resources/refresh.png</iconset>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <widget class="QDialogButtonBox" name="buttonBox_stats">
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_progressStats">
+     <property name="text">
+      <string>progress</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="progressBar_stats">
+     <property name="value">
+      <number>0</number>
      </property>
     </widget>
    </item>
@@ -51,6 +79,9 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="layout_plot"/>
    </item>
    <item>
     <widget class="QTableWidget" name="tableWidget">
@@ -68,6 +99,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../../plugins/Blurring/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -175,4 +175,4 @@ class Ui_Form(object):
         self.label_progress.setText(_translate("Form", "progress text", None))
 
 from qgis.gui import QgsCollapsibleGroupBox
-import resources_rc
+from Blurring import resources_rc

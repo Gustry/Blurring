@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Wed Aug  6 14:24:14 2014
+# Created: Wed Aug  6 15:42:43 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,6 +28,7 @@ class Ui_BlurringDialogBase(object):
         BlurringDialogBase.setObjectName(_fromUtf8("BlurringDialogBase"))
         BlurringDialogBase.resize(547, 536)
         self.horizontalLayout_2 = QtGui.QHBoxLayout(BlurringDialogBase)
+        self.horizontalLayout_2.setContentsMargins(0, 0, -1, 0)
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.listWidget = QtGui.QListWidget(BlurringDialogBase)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
