@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/plugins/Blurring">
+        <file>icon.png</file>
+	<file>resources/refresh.png</file>
+    </qresource>
+</RCC>
