@@ -71,20 +71,36 @@ QListWidget::item::selected {
       <property name="text">
        <string>Blur</string>
       </property>
+      <property name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/plugins/Blurring/resources/blur.png</normaloff>:/plugins/Blurring/resources/blur.png</iconset>
+      </property>
      </item>
      <item>
       <property name="text">
        <string>Statistics</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/plugins/Blurring/resources/sigma.png</normaloff>:/plugins/Blurring/resources/sigma.png</iconset>
       </property>
      </item>
      <item>
       <property name="text">
        <string>Help</string>
       </property>
+      <property name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/plugins/Blurring/resources/about.png</normaloff>:/plugins/Blurring/resources/about.png</iconset>
+      </property>
      </item>
      <item>
       <property name="text">
        <string>About</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/plugins/Blurring/resources/info.png</normaloff>:/plugins/Blurring/resources/info.png</iconset>
       </property>
      </item>
     </widget>
@@ -169,6 +185,7 @@ QListWidget::item::selected {
  </customwidgets>
  <resources>
   <include location="../../QuickOSM/resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections>
   <connection>

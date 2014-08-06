@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Aug  5 21:53:16 2014
+# Created: Wed Aug  6 10:57:48 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -56,12 +56,24 @@ class Ui_BlurringDialogBase(object):
         self.listWidget.setUniformItemSizes(True)
         self.listWidget.setObjectName(_fromUtf8("listWidget"))
         item = QtGui.QListWidgetItem()
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/blur.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        item.setIcon(icon)
         self.listWidget.addItem(item)
         item = QtGui.QListWidgetItem()
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/sigma.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        item.setIcon(icon1)
         self.listWidget.addItem(item)
         item = QtGui.QListWidgetItem()
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/about.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        item.setIcon(icon2)
         self.listWidget.addItem(item)
         item = QtGui.QListWidgetItem()
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/info.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        item.setIcon(icon3)
         self.listWidget.addItem(item)
         self.horizontalLayout_2.addWidget(self.listWidget)
         self.verticalLayout_5 = QtGui.QVBoxLayout()

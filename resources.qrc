@@ -2,5 +2,9 @@
     <qresource prefix="/plugins/Blurring">
         <file>icon.png</file>
 	<file>resources/refresh.png</file>
+	<file>resources/blur.png</file>
+	<file>resources/about.png</file>
+	<file>resources/info.png</file>
+	<file>resources/sigma.png</file>
     </qresource>
 </RCC>
