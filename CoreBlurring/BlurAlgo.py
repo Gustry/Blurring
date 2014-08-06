@@ -54,7 +54,7 @@ class BlurAlgo:
             
             #We have to be sure that every intial point intersect the layer
             if not self.__polygonEnvelope.contains(geom):
-                raise PointOutsideEnvelopeException
+                raise PointOutsideEnvelopeException(number=feature.id())
             
             radius = self.__radius
             i = 0

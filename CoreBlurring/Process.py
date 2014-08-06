@@ -15,7 +15,6 @@ class Process:
 
     @staticmethod
     def blurProcess(dialog=None, layerToBlur=None, radius=None, display=None, selectedFeaturesOnly=None, fileName=None, layerEnvelope=None, exportRadius=None, exportCentroid=None):
-        print "process"
         
         if not fileName:
             fileName = getTempFilenameInTempFolder("blurring.shp")

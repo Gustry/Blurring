@@ -113,26 +113,12 @@ QListWidget::item::selected {
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="BlurWidget" name="blur">
         <layout class="QVBoxLayout" name="verticalLayout"/>
        </widget>
-       <widget class="QWidget" name="statistics">
-        <widget class="QLabel" name="label_9">
-         <property name="geometry">
-          <rect>
-           <x>110</x>
-           <y>60</y>
-           <width>56</width>
-           <height>15</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Stats</string>
-         </property>
-        </widget>
-       </widget>
+       <widget class="StatsWidget" name="statistics"/>
        <widget class="QWidget" name="help">
         <widget class="QLabel" name="label">
          <property name="geometry">
@@ -180,6 +166,12 @@ QListWidget::item::selected {
    <class>BlurWidget</class>
    <extends>QWidget</extends>
    <header>blur_dialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StatsWidget</class>
+   <extends>QWidget</extends>
+   <header>stats_dialog.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

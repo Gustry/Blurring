@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'blur.ui'
 #
-# Created: Wed Aug  6 09:42:09 2014
+# Created: Wed Aug  6 14:02:07 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -154,6 +154,7 @@ class Ui_Form(object):
         self.verticalLayout.addItem(spacerItem1)
 
         self.retranslateUi(Form)
+        QtCore.QObject.connect(self.checkBox_envelope, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.comboBox_envelope.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -174,4 +175,4 @@ class Ui_Form(object):
         self.label_progress.setText(_translate("Form", "progress text", None))
 
 from qgis.gui import QgsCollapsibleGroupBox
-from Blurring import resources_rc
+import resources_rc

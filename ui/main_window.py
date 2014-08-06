@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Wed Aug  6 10:57:48 2014
+# Created: Wed Aug  6 14:24:14 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -88,11 +88,8 @@ class Ui_BlurringDialogBase(object):
         self.verticalLayout = QtGui.QVBoxLayout(self.blur)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.stackedWidget.addWidget(self.blur)
-        self.statistics = QtGui.QWidget()
+        self.statistics = StatsWidget()
         self.statistics.setObjectName(_fromUtf8("statistics"))
-        self.label_9 = QtGui.QLabel(self.statistics)
-        self.label_9.setGeometry(QtCore.QRect(110, 60, 56, 15))
-        self.label_9.setObjectName(_fromUtf8("label_9"))
         self.stackedWidget.addWidget(self.statistics)
         self.help = QtGui.QWidget()
         self.help.setObjectName(_fromUtf8("help"))
@@ -111,7 +108,7 @@ class Ui_BlurringDialogBase(object):
 
         self.retranslateUi(BlurringDialogBase)
         self.listWidget.setCurrentRow(-1)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.listWidget, QtCore.SIGNAL(_fromUtf8("currentRowChanged(int)")), self.stackedWidget.setCurrentIndex)
         QtCore.QMetaObject.connectSlotsByName(BlurringDialogBase)
 
@@ -128,10 +125,10 @@ class Ui_BlurringDialogBase(object):
         item = self.listWidget.item(3)
         item.setText(_translate("BlurringDialogBase", "About", None))
         self.listWidget.setSortingEnabled(__sortingEnabled)
-        self.label_9.setText(_translate("BlurringDialogBase", "Stats", None))
         self.label.setText(_translate("BlurringDialogBase", "Help soon", None))
         self.label_2.setText(_translate("BlurringDialogBase", "About soon", None))
 
+from stats_dialog import StatsWidget
 from qgis.gui import QgsMessageBar
 from blur_dialog import BlurWidget
 from Blurring import resources_rc

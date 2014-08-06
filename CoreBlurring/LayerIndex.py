@@ -29,7 +29,7 @@ class LayerIndex:
     def __init__(self, layer):
         self.__layer = layer        
         self.__index = QgsSpatialIndex()
-        for ft in layer.features:
+        for ft in layer.getFeatures():
             self.__index.insertFeature(ft)
         
     def contains(self, point):

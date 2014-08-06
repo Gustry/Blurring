@@ -56,5 +56,5 @@ class CreatingShapeFileException(BlurringException):
 class PointOutsideEnvelopeException(BlurringException):
     def __init__(self, msg=None, number=None):
         if not msg:
-            msg = Tools.trans(u'Point number is outside the envelope.')
+            msg = Tools.trans(u'Point number %d is outside the envelope.' %number)
         BlurringException.__init__(self,msg)
