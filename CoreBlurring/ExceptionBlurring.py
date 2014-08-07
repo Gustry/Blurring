@@ -58,3 +58,9 @@ class PointOutsideEnvelopeException(BlurringException):
         if not msg:
             msg = Tools.trans(u'Point number %d is outside the envelope.' %number)
         BlurringException.__init__(self,msg)
+
+class DifferentCrsException(BlurringException):
+    def __init__(self, msg=None, epsg1=None, epsg2=None):
+        if not msg:
+            msg = Tools.trans(u"It's not the same projection system : %s != %s" %(epsg1,epsg2))
+        BlurringException.__init__(self,msg)

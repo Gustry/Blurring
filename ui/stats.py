@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'stats.ui'
 #
-# Created: Wed Aug  6 16:17:59 2014
+# Created: Thu Aug  7 14:19:26 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(931, 728)
+        Form.resize(818, 728)
         self.verticalLayout = QtGui.QVBoxLayout(Form)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.formLayout = QtGui.QFormLayout()
@@ -51,25 +51,33 @@ class Ui_Form(object):
         self.comboBox_statsLayer.setObjectName(_fromUtf8("comboBox_statsLayer"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.comboBox_statsLayer)
         self.verticalLayout.addLayout(self.formLayout)
-        self.buttonBox_stats = QtGui.QDialogButtonBox(Form)
-        self.buttonBox_stats.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
-        self.buttonBox_stats.setObjectName(_fromUtf8("buttonBox_stats"))
-        self.verticalLayout.addWidget(self.buttonBox_stats)
         self.label_progressStats = QtGui.QLabel(Form)
         self.label_progressStats.setObjectName(_fromUtf8("label_progressStats"))
         self.verticalLayout.addWidget(self.label_progressStats)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.progressBar_stats = QtGui.QProgressBar(Form)
         self.progressBar_stats.setProperty("value", 0)
         self.progressBar_stats.setObjectName(_fromUtf8("progressBar_stats"))
-        self.verticalLayout.addWidget(self.progressBar_stats)
+        self.horizontalLayout_2.addWidget(self.progressBar_stats)
+        self.buttonBox_stats = QtGui.QDialogButtonBox(Form)
+        self.buttonBox_stats.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox_stats.setCenterButtons(False)
+        self.buttonBox_stats.setObjectName(_fromUtf8("buttonBox_stats"))
+        self.horizontalLayout_2.addWidget(self.buttonBox_stats)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.line = QtGui.QFrame(Form)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName(_fromUtf8("line"))
         self.verticalLayout.addWidget(self.line)
+        self.label_3 = QtGui.QLabel(Form)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.verticalLayout.addWidget(self.label_3)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.tableWidget = QtGui.QTableWidget(Form)
+        self.tableWidget.setMinimumSize(QtCore.QSize(200, 0))
         self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setRowCount(0)
@@ -93,6 +101,7 @@ class Ui_Form(object):
         self.label.setText(_translate("Form", "Blurred layer", None))
         self.label_2.setText(_translate("Form", "Stats layer", None))
         self.label_progressStats.setText(_translate("Form", "progress", None))
+        self.label_3.setText(_translate("Form", "TextLabel", None))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Parameter", None))
         item = self.tableWidget.horizontalHeaderItem(1)

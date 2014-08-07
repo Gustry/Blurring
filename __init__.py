@@ -28,6 +28,7 @@ from qgis.core import *
 from qgis.gui import *
 from qgis.utils import iface
 from Blurring.CoreBlurring.Tools import *
+from Blurring.CoreBlurring.Stats import Stats
 from processing.core.GeoAlgorithmExecutionException import GeoAlgorithmExecutionException
 from Blurring.CoreBlurring.ExceptionBlurring import *
 import resources_rc
