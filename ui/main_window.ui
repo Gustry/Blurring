@@ -146,7 +146,7 @@ QListWidget::item::selected {
             <item>
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>This project was supervised by UMR-EspaceDev</string>
+               <string>This project was supervised by UMR Espace-Dev (IRD, UAG, UM2, UR)</string>
               </property>
              </widget>
             </item>
@@ -173,6 +173,13 @@ QListWidget::item::selected {
               </item>
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_6">
+                <item>
+                 <widget class="QLabel" name="label_9">
+                  <property name="text">
+                   <string>Thérèse Libourel</string>
+                  </property>
+                 </widget>
+                </item>
                 <item>
                  <widget class="QLabel" name="label_8">
                   <property name="text">
@@ -283,7 +290,7 @@ QListWidget::item::selected {
               <item>
                <widget class="QLabel" name="label_15">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plugin : &lt;a href=&quot;http://www.gnu.org/licenses/gpl-2.0.html&quot;&gt;&lt;span style=&quot; text-decoration: none; color:#0057ae;&quot;&gt;Licence GPL Version 2&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;http://www.gnu.org/licenses/gpl-2.0.html&quot;&gt;&lt;span style=&quot; text-decoration: none; color:#0057ae;&quot;&gt;Licence GPL Version 2&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>

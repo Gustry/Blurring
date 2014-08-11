@@ -59,7 +59,7 @@ class BlurWidget(QWidget, Ui_Form):
                                                  filter="Shapefiles (*.shp)")
         if outputFile:
             self.lineEdit_outputFile.setText(outputFile)
-            path = os.path.basename(outputFile)
+            path = os.path.dirname(outputFile)
             Tools.setLastInputPath(path)
         else:
             self.lineEdit_outputFile.setText('')

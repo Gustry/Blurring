@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'stats.ui'
 #
-# Created: Mon Aug 11 11:01:30 2014
+# Created: Mon Aug 11 18:07:56 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -41,13 +41,20 @@ class Ui_Form(object):
         self.label = QtGui.QLabel(Form)
         self.label.setObjectName(_fromUtf8("label"))
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label)
-        self.comboBox_blurredLayer = QtGui.QComboBox(Form)
-        self.comboBox_blurredLayer.setObjectName(_fromUtf8("comboBox_blurredLayer"))
-        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.comboBox_blurredLayer)
         self.label_2 = QtGui.QLabel(Form)
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_2)
+        self.comboBox_blurredLayer = QtGui.QComboBox(Form)
+        self.comboBox_blurredLayer.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
+        self.comboBox_blurredLayer.setObjectName(_fromUtf8("comboBox_blurredLayer"))
+        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.comboBox_blurredLayer)
         self.comboBox_statsLayer = QtGui.QComboBox(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.comboBox_statsLayer.sizePolicy().hasHeightForWidth())
+        self.comboBox_statsLayer.setSizePolicy(sizePolicy)
+        self.comboBox_statsLayer.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
         self.comboBox_statsLayer.setObjectName(_fromUtf8("comboBox_statsLayer"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.comboBox_statsLayer)
         self.verticalLayout.addLayout(self.formLayout)
@@ -71,6 +78,17 @@ class Ui_Form(object):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName(_fromUtf8("line"))
         self.verticalLayout.addWidget(self.line)
+        self.horizontalLayout_3 = QtGui.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
+        self.pushButton_saveTable = QtGui.QPushButton(Form)
+        self.pushButton_saveTable.setObjectName(_fromUtf8("pushButton_saveTable"))
+        self.horizontalLayout_3.addWidget(self.pushButton_saveTable)
+        self.pushButton_saveYValues = QtGui.QPushButton(Form)
+        self.pushButton_saveYValues.setObjectName(_fromUtf8("pushButton_saveYValues"))
+        self.horizontalLayout_3.addWidget(self.pushButton_saveYValues)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.tableWidget = QtGui.QTableWidget(Form)
@@ -98,6 +116,8 @@ class Ui_Form(object):
         self.label.setText(_translate("Form", "Blurred layer", None))
         self.label_2.setText(_translate("Form", "Stats layer", None))
         self.label_progressStats.setText(_translate("Form", "progress", None))
+        self.pushButton_saveTable.setText(_translate("Form", "Save table", None))
+        self.pushButton_saveYValues.setText(_translate("Form", "Save Y values", None))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Parameter", None))
         item = self.tableWidget.horizontalHeaderItem(1)

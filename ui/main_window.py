@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Mon Aug 11 10:59:16 2014
+# Created: Mon Aug 11 17:28:27 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -126,6 +126,9 @@ class Ui_BlurringDialogBase(object):
         self.horizontalLayout.addWidget(self.label_6)
         self.verticalLayout_6 = QtGui.QVBoxLayout()
         self.verticalLayout_6.setObjectName(_fromUtf8("verticalLayout_6"))
+        self.label_9 = QtGui.QLabel(self.groupBox)
+        self.label_9.setObjectName(_fromUtf8("label_9"))
+        self.verticalLayout_6.addWidget(self.label_9)
         self.label_8 = QtGui.QLabel(self.groupBox)
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.verticalLayout_6.addWidget(self.label_8)
@@ -215,7 +218,8 @@ class Ui_BlurringDialogBase(object):
         item.setText(_translate("BlurringDialogBase", "About", None))
         self.listWidget.setSortingEnabled(__sortingEnabled)
         self.groupBox.setTitle(_translate("BlurringDialogBase", "Supervision", None))
-        self.label_5.setText(_translate("BlurringDialogBase", "This project was supervised by UMR-EspaceDev", None))
+        self.label_5.setText(_translate("BlurringDialogBase", "This project was supervised by UMR Espace-Dev (IRD, UAG, UM2, UR)", None))
+        self.label_9.setText(_translate("BlurringDialogBase", "Thérèse Libourel", None))
         self.label_8.setText(_translate("BlurringDialogBase", "Vincent Herbreteau", None))
         self.label_7.setText(_translate("BlurringDialogBase", "Christophe Révillion", None))
         self.groupBox_2.setTitle(_translate("BlurringDialogBase", "Realization", None))
@@ -227,7 +231,7 @@ class Ui_BlurringDialogBase(object):
         self.label_19.setText(_translate("BlurringDialogBase", "Github\'s repository", None))
         self.label_20.setText(_translate("BlurringDialogBase", "<a href=\"https://github.com/Gustry/Blurring\" style=\"text-decoration:none;\">https://github.com/Gustry/Blurring</a>", None))
         self.groupBox_3.setTitle(_translate("BlurringDialogBase", "Licence", None))
-        self.label_15.setText(_translate("BlurringDialogBase", "<html><head/><body><p>Plugin : <a href=\"http://www.gnu.org/licenses/gpl-2.0.html\"><span style=\" text-decoration: none; color:#0057ae;\">Licence GPL Version 2</span></a></p></body></html>", None))
+        self.label_15.setText(_translate("BlurringDialogBase", "<html><head/><body><p><a href=\"http://www.gnu.org/licenses/gpl-2.0.html\"><span style=\" text-decoration: none; color:#0057ae;\">Licence GPL Version 2</span></a></p></body></html>", None))
         self.label_16.setText(_translate("BlurringDialogBase", "<html><head/><body><p><a href=\"https://www.gnu.org/licenses/gpl-2.0.html\"><img src=\":/plugins/Blurring/resources/gnu.png\"/></a></p></body></html>", None))
 
 from PyQt4 import QtWebKit

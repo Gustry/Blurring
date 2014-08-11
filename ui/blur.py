@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'blur.ui'
 #
-# Created: Wed Aug  6 14:02:07 2014
+# Created: Mon Aug 11 17:30:49 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(499, 434)
+        Form.resize(499, 517)
         self.verticalLayout = QtGui.QVBoxLayout(Form)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.formLayout = QtGui.QFormLayout()
@@ -35,6 +35,11 @@ class Ui_Form(object):
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.comboBox_layerToBlur = QtGui.QComboBox(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.comboBox_layerToBlur.sizePolicy().hasHeightForWidth())
+        self.comboBox_layerToBlur.setSizePolicy(sizePolicy)
         self.comboBox_layerToBlur.setObjectName(_fromUtf8("comboBox_layerToBlur"))
         self.horizontalLayout_2.addWidget(self.comboBox_layerToBlur)
         self.pushButton_refreshLayersToBlur = QtGui.QPushButton(Form)

@@ -16,7 +16,8 @@ class Tools:
     
     @staticmethod
     def setLastInputPath(lastDir):
-        path = QFileInfo(lastDir).absolutePath()
+        path = lastDir
+        #path = QFileInfo(lastDir).absolutePath()
         settings = QSettings()
         settings.setValue( "LastInputPath", str(path))
        

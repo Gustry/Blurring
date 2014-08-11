@@ -40,6 +40,8 @@ class StatsWidget(QWidget, Ui_Form):
         self.label_progressStats.setText("")
         
         self.pushButton_refreshLayers.clicked.connect(self.fillComboxboxLayers)
+        self.pushButton_saveTable.clicked.connect(self.saveTable)
+        self.pushButton_saveYValues.clicked.connect(self.saveYValues)
         self.buttonBox_stats.button(QDialogButtonBox.Ok).clicked.connect(self.runStats)
         self.buttonBox_stats.button(QDialogButtonBox.Cancel).clicked.connect(self.hide)
         
@@ -67,6 +69,11 @@ class StatsWidget(QWidget, Ui_Form):
                 
                 if layer.geometryType() == 2 :
                     self.comboBox_blurredLayer.addItem(layer.name(),layer)
+                    
+        self.comboBox_blurredLayer.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        print "resize"
+        self.comboBox_blurredLayer.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLength)            
+
     
     def runStats(self):
         self.progressBar_stats.setValue(0)
@@ -75,13 +82,17 @@ class StatsWidget(QWidget, Ui_Form):
         
         index = self.comboBox_blurredLayer.currentIndex()
         layerBlurred = self.comboBox_blurredLayer.itemData(index)
-        crsLayerBlurred = layerBlurred.crs()
         
         index = self.comboBox_statsLayer.currentIndex()
         layerStats = self.comboBox_statsLayer.itemData(index)
-        crsLayerStats = layerStats.crs()
         
         try:
+            
+            if not layerBlurred or not layerStats:
+                raise NoLayerProvidedException
+            
+            crsLayerBlurred = layerBlurred.crs()
+            crsLayerStats = layerStats.crs()
             if crsLayerBlurred != crsLayerStats:
                 raise DifferentCrsException(epsg1 = crsLayerBlurred.authid(), epsg2 = crsLayerStats.authid())
                 '''
@@ -107,13 +118,19 @@ class StatsWidget(QWidget, Ui_Form):
             
             if not layerBlurred or not layerStats:
                 return False
-        
-            featuresStats = {feature.id(): feature for (feature) in layerStats.getFeatures()}
             
             nbFeatureStats = layerStats.featureCount()
             nbFeatureBlurred = layerBlurred.featureCount()
-            
-            self.label_progressStats.setText("Creating index")
+        
+            self.label_progressStats.setText("Preparing index on the stats layer 1/3")
+            featuresStats = {}
+            for i,feature in enumerate(layerStats.getFeatures()):
+                featuresStats[feature.id()] = feature
+                percent = int((i+1)*100/nbFeatureStats)
+                self.progressBar_stats.setValue(percent)
+                QApplication.processEvents()
+                
+            self.label_progressStats.setText("Creating index on the stats layer 2/3")
             QApplication.processEvents()
             index = QgsSpatialIndex()
             for i,f in enumerate(layerStats.getFeatures()):
@@ -123,8 +140,8 @@ class StatsWidget(QWidget, Ui_Form):
                 self.progressBar_stats.setValue(percent)
                 QApplication.processEvents()
             
-            tab = []
-            self.label_progressStats.setText("Calculating")
+            self.tab = []
+            self.label_progressStats.setText("Calculating 3/3")
             QApplication.processEvents()
             for i,feature in enumerate(layerBlurred.getFeatures()):
                 count = 0
@@ -133,13 +150,13 @@ class StatsWidget(QWidget, Ui_Form):
                     f = featuresStats[id]
                     if f.geometry().intersects(feature.geometry()):
                         count += 1
-                tab.append(count)
+                self.tab.append(count)
                 
                 percent = int((i+1)*100/nbFeatureBlurred)
                 self.progressBar_stats.setValue(percent)
                 QApplication.processEvents()
             
-            stats = Stats(tab)
+            stats = Stats(self.tab)
             
             itemsStats = []
             itemsStats.append("Count(blurred),%d"%nbFeatureBlurred)
@@ -162,11 +179,55 @@ class StatsWidget(QWidget, Ui_Form):
                 self.tableWidget.setItem(i, 1, QTableWidgetItem(s[1]))
             self.tableWidget.resizeRowsToContents()
             
-            self.drawPlot(tab)
+            self.drawPlot(self.tab)
             
         except BlurringException,e:
             self.label_progressStats.setText("")
             Tools.displayMessageBar(msg=e.msg, level=e.level , duration=e.duration)
+            
+    def saveTable(self):
+        csvString = "parameter,values\n"
+        
+        for i in range(self.tableWidget.rowCount()):
+            itemParam = self.tableWidget.item(i,0) 
+            itemValue = self.tableWidget.item(i,1)
+            csvString += str(itemParam.text()) + "," + itemValue.text() + "\n"
+            
+        lastDir = Tools.getLastInputPath()
+        print lastDir
+        outputFile = QFileDialog.getSaveFileName(parent=self,
+                                                 caption=Tools.trans('Select file'),
+                                                 directory=lastDir,
+                                                 filter="CSV (*.csv)")
+        if outputFile:
+            path = os.path.dirname(outputFile)
+            Tools.setLastInputPath(path)
+
+            fh = open(outputFile,"w")
+            fh.write(csvString)
+            fh.close()
+            return True
+   
+    def saveYValues(self):
+        csvString = "parameter,values\n"
+        
+        for value in self.tab:
+            csvString += str(value) + "\n"
+            
+        lastDir = Tools.getLastInputPath()
+        outputFile = QFileDialog.getSaveFileName(parent=self,
+                                                 caption=Tools.trans('Select file'),
+                                                 directory=lastDir,
+                                                 filter="CSV (*.csv)")
+        if outputFile:
+            path = os.path.dirname(outputFile)
+            Tools.setLastInputPath(path)
+
+            fh = open(outputFile,"w")
+            fh.write(csvString)
+            fh.close()
+            return True    
+
 
     def drawPlot(self,data):
         #Creating the plot        
@@ -176,6 +237,11 @@ class StatsWidget(QWidget, Ui_Form):
         ax.hold(False)
         # plot data
         ax.plot(data, '*-')
+        
+        #ax.set_title('Number of intersections per entity')
+        ax.set_xlabel('Blurred entity')
+        ax.set_ylabel('Number of intersections')
+        
         # refresh canvas
         self.canvas.draw()
         
@@ -186,3 +252,10 @@ class StatsDockWidget(QDockWidget):
         self.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         self.setWidget(StatsWidget())
         self.setWindowTitle(Tools.trans("Blurring - Stats"))
+        
+
+class NavigationToolbar(NavigationToolbar):
+    # only display the buttons we need
+    #print NavigationToolbar.toolitems
+    toolitems = [t for t in NavigationToolbar.toolitems if
+                 t[0] in ('Home', 'Back', 'Next', 'Pan', 'Zoom', 'Save')]
