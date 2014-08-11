@@ -83,9 +83,13 @@ class StatsWidget(QWidget, Ui_Form):
         
         try:
             if crsLayerBlurred != crsLayerStats:
+                raise DifferentCrsException(epsg1 = crsLayerBlurred.authid(), epsg2 = crsLayerStats.authid())
+                '''
                 print "CRS"
+                print crsLayerBlurred
+                print crsLayerStats
                 crsTransform = QgsCoordinateTransform(crsLayerBlurred, crsLayerStats)
-                
+                print layerBlurred.source()
                 newLayer = QgsVectorLayer(layerBlurred.source(), layerBlurred.name() + "_clone", layerBlurred.providerType())
                 newLayer.setCrs(crsLayerStats)
                 
@@ -95,7 +99,8 @@ class StatsWidget(QWidget, Ui_Form):
                     print "transform"
                     feature.geometry().transform(crsTransform)
                 layerBlurred = newLayer
-                #raise DifferentCrsException(epsg1 = crsLayerBlurred.authid(), epsg2 = crsLayerStats.authid())
+                print layerBlurred.crs().authid()
+                '''
             
             if layerBlurred == layerStats:
                 return False
@@ -156,7 +161,6 @@ class StatsWidget(QWidget, Ui_Form):
                 self.tableWidget.setItem(i, 0, QTableWidgetItem(s[0]))
                 self.tableWidget.setItem(i, 1, QTableWidgetItem(s[1]))
             self.tableWidget.resizeRowsToContents()
-            self.label_3.setText(str(tab))
             
             self.drawPlot(tab)
             

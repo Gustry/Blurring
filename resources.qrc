@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/plugins/Blurring">
         <file>icon.png</file>
+	<file>resources/umr.jpeg</file>
+	<file>resources/um2.png</file>
+	<file>resources/gnu.png</file>
 	<file>resources/refresh.png</file>
 	<file>resources/blur.png</file>
 	<file>resources/about.png</file>

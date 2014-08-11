@@ -112,6 +112,10 @@ class BlurWidget(QWidget, Ui_Form):
                 fileName = getTempFilenameInTempFolder("blurring.shp")
         
             if layerEnvelope:
+                
+                if layerToBlur.crs() != layerEnvelope.crs():
+                    raise DifferentCrsException(epsg1 = layerToBlur.crs().authid(), epsg2 = layerEnvelope.crs().authid())
+                
                 self.label_progress.setText("Creating index ...")
                 layerEnvelope = LayerIndex.LayerIndex(layerEnvelope)
                 self.progressBar_blur.setValue(0)

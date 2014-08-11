@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'stats.ui'
 #
-# Created: Thu Aug  7 14:19:26 2014
+# Created: Mon Aug 11 11:01:30 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -71,9 +71,6 @@ class Ui_Form(object):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName(_fromUtf8("line"))
         self.verticalLayout.addWidget(self.line)
-        self.label_3 = QtGui.QLabel(Form)
-        self.label_3.setObjectName(_fromUtf8("label_3"))
-        self.verticalLayout.addWidget(self.label_3)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.tableWidget = QtGui.QTableWidget(Form)
@@ -101,7 +98,6 @@ class Ui_Form(object):
         self.label.setText(_translate("Form", "Blurred layer", None))
         self.label_2.setText(_translate("Form", "Stats layer", None))
         self.label_progressStats.setText(_translate("Form", "progress", None))
-        self.label_3.setText(_translate("Form", "TextLabel", None))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Parameter", None))
         item = self.tableWidget.horizontalHeaderItem(1)
