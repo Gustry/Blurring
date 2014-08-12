@@ -69,11 +69,6 @@ class StatsWidget(QWidget, Ui_Form):
                 
                 if layer.geometryType() == 2 :
                     self.comboBox_blurredLayer.addItem(layer.name(),layer)
-                    
-        self.comboBox_blurredLayer.setSizeAdjustPolicy(QComboBox.AdjustToContents)
-        print "resize"
-        self.comboBox_blurredLayer.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLength)            
-
     
     def runStats(self):
         self.progressBar_stats.setValue(0)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'stats.ui'
 #
-# Created: Mon Aug 11 18:07:56 2014
+# Created: Tue Aug 12 09:21:56 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(818, 728)
+        Form.resize(517, 728)
         self.verticalLayout = QtGui.QVBoxLayout(Form)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.formLayout = QtGui.QFormLayout()
@@ -43,20 +43,35 @@ class Ui_Form(object):
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label)
         self.label_2 = QtGui.QLabel(Form)
         self.label_2.setObjectName(_fromUtf8("label_2"))
-        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_2)
+        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_2)
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
         self.comboBox_blurredLayer = QtGui.QComboBox(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.comboBox_blurredLayer.sizePolicy().hasHeightForWidth())
+        self.comboBox_blurredLayer.setSizePolicy(sizePolicy)
         self.comboBox_blurredLayer.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
         self.comboBox_blurredLayer.setObjectName(_fromUtf8("comboBox_blurredLayer"))
-        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.comboBox_blurredLayer)
+        self.horizontalLayout_4.addWidget(self.comboBox_blurredLayer)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_4.addItem(spacerItem)
+        self.formLayout.setLayout(1, QtGui.QFormLayout.FieldRole, self.horizontalLayout_4)
+        self.horizontalLayout_5 = QtGui.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
         self.comboBox_statsLayer = QtGui.QComboBox(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.comboBox_statsLayer.sizePolicy().hasHeightForWidth())
         self.comboBox_statsLayer.setSizePolicy(sizePolicy)
         self.comboBox_statsLayer.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContentsOnFirstShow)
         self.comboBox_statsLayer.setObjectName(_fromUtf8("comboBox_statsLayer"))
-        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.comboBox_statsLayer)
+        self.horizontalLayout_5.addWidget(self.comboBox_statsLayer)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem1)
+        self.formLayout.setLayout(3, QtGui.QFormLayout.FieldRole, self.horizontalLayout_5)
         self.verticalLayout.addLayout(self.formLayout)
         self.label_progressStats = QtGui.QLabel(Form)
         self.label_progressStats.setObjectName(_fromUtf8("label_progressStats"))
@@ -86,8 +101,8 @@ class Ui_Form(object):
         self.pushButton_saveYValues = QtGui.QPushButton(Form)
         self.pushButton_saveYValues.setObjectName(_fromUtf8("pushButton_saveYValues"))
         self.horizontalLayout_3.addWidget(self.pushButton_saveYValues)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem)
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem2)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
