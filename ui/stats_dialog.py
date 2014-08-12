@@ -90,23 +90,6 @@ class StatsWidget(QWidget, Ui_Form):
             crsLayerStats = layerStats.crs()
             if crsLayerBlurred != crsLayerStats:
                 raise DifferentCrsException(epsg1 = crsLayerBlurred.authid(), epsg2 = crsLayerStats.authid())
-                '''
-                print "CRS"
-                print crsLayerBlurred
-                print crsLayerStats
-                crsTransform = QgsCoordinateTransform(crsLayerBlurred, crsLayerStats)
-                print layerBlurred.source()
-                newLayer = QgsVectorLayer(layerBlurred.source(), layerBlurred.name() + "_clone", layerBlurred.providerType())
-                newLayer.setCrs(crsLayerStats)
-                
-                print newLayer.featureCount()
-                
-                for feature in newLayer.getFeatures():
-                    print "transform"
-                    feature.geometry().transform(crsTransform)
-                layerBlurred = newLayer
-                print layerBlurred.crs().authid()
-                '''
             
             if layerBlurred == layerStats:
                 return False
@@ -181,6 +164,10 @@ class StatsWidget(QWidget, Ui_Form):
             Tools.displayMessageBar(msg=e.msg, level=e.level , duration=e.duration)
             
     def saveTable(self):
+        
+        if not self.tableWidget.rowCount():
+            return False
+        
         csvString = "parameter,values\n"
         
         for i in range(self.tableWidget.rowCount()):
@@ -204,6 +191,10 @@ class StatsWidget(QWidget, Ui_Form):
             return True
    
     def saveYValues(self):
+        
+        if not self.tableWidget.rowCount():
+            return False
+        
         csvString = "parameter,values\n"
         
         for value in self.tab:
@@ -236,6 +227,7 @@ class StatsWidget(QWidget, Ui_Form):
         #ax.set_title('Number of intersections per entity')
         ax.set_xlabel('Blurred entity')
         ax.set_ylabel('Number of intersections')
+        ax.grid()
         
         # refresh canvas
         self.canvas.draw()

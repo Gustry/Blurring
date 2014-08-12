@@ -164,7 +164,7 @@ QListWidget::item::selected {
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="../resources.qrc">:/plugins/Blurring/resources/umr.jpeg</pixmap>
+                 <pixmap resource="../resources.qrc">:/plugins/Blurring/resources/espace-dev.png</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>false</bool>
@@ -176,21 +176,21 @@ QListWidget::item::selected {
                 <item>
                  <widget class="QLabel" name="label_9">
                   <property name="text">
-                   <string>Thérèse Libourel</string>
+                   <string>&lt;a href=&quot;mailto:therese.libourel@univ-montp2.fr?subject=Plugin Blurring&quot; style=&quot;text-decoration:none;&quot;&gt;Thérèse Libourel&lt;/a&gt;</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="label_8">
                   <property name="text">
-                   <string>Vincent Herbreteau</string>
+                   <string>&lt;a href=&quot;mailto:vincent.herbreteau@ird.fr?subject=Plugin Blurring&quot; style=&quot;text-decoration:none;&quot;&gt;Vincent Herbreteau&lt;/a&gt;</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="label_7">
                   <property name="text">
-                   <string>Christophe Révillion</string>
+                   <string>&lt;a href=&quot;mailto:christophe.revillion@ird.fr?subject=Plugin Blurring&quot; style=&quot;text-decoration:none;&quot;&gt;Christophe Révillion&lt;/a&gt;</string>
                   </property>
                  </widget>
                 </item>

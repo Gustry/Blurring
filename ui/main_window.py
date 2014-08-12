@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Mon Aug 11 17:28:27 2014
+# Created: Tue Aug 12 17:28:42 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -120,7 +120,7 @@ class Ui_BlurringDialogBase(object):
         sizePolicy.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
         self.label_6.setSizePolicy(sizePolicy)
         self.label_6.setText(_fromUtf8(""))
-        self.label_6.setPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/umr.jpeg")))
+        self.label_6.setPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/Blurring/resources/espace-dev.png")))
         self.label_6.setScaledContents(False)
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.horizontalLayout.addWidget(self.label_6)
@@ -219,9 +219,9 @@ class Ui_BlurringDialogBase(object):
         self.listWidget.setSortingEnabled(__sortingEnabled)
         self.groupBox.setTitle(_translate("BlurringDialogBase", "Supervision", None))
         self.label_5.setText(_translate("BlurringDialogBase", "This project was supervised by UMR Espace-Dev (IRD, UAG, UM2, UR)", None))
-        self.label_9.setText(_translate("BlurringDialogBase", "Thérèse Libourel", None))
-        self.label_8.setText(_translate("BlurringDialogBase", "Vincent Herbreteau", None))
-        self.label_7.setText(_translate("BlurringDialogBase", "Christophe Révillion", None))
+        self.label_9.setText(_translate("BlurringDialogBase", "<a href=\"mailto:therese.libourel@univ-montp2.fr?subject=Plugin Blurring\" style=\"text-decoration:none;\">Thérèse Libourel</a>", None))
+        self.label_8.setText(_translate("BlurringDialogBase", "<a href=\"mailto:vincent.herbreteau@ird.fr?subject=Plugin Blurring\" style=\"text-decoration:none;\">Vincent Herbreteau</a>", None))
+        self.label_7.setText(_translate("BlurringDialogBase", "<a href=\"mailto:christophe.revillion@ird.fr?subject=Plugin Blurring\" style=\"text-decoration:none;\">Christophe Révillion</a>", None))
         self.groupBox_2.setTitle(_translate("BlurringDialogBase", "Realization", None))
         self.label.setText(_translate("BlurringDialogBase", "Mamadou Sane", None))
         self.label_2.setText(_translate("BlurringDialogBase", "Modou Ndiaye", None))

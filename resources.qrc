@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/plugins/Blurring">
         <file>icon.png</file>
+	<file>resources/espace-dev.png</file>
 	<file>resources/umr.jpeg</file>
 	<file>resources/um2.png</file>
 	<file>resources/gnu.png</file>
