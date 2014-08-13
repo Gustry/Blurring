@@ -22,6 +22,8 @@
 """
 
 from Blurring import *
+from Blurring.ProcessingBlurring.BlurringAlgorithmProvider import BlurringAlgorithmProvider
+from processing.core.Processing import Processing
 from ui.main_window_dialog import MainWindowDialog
 import os.path
 
@@ -55,8 +57,8 @@ class Blurring:
                 QCoreApplication.installTranslator(self.translator)
 
         #Add to processing
-        #self.provider = BlurringAlgorithmProvider()
-        #Processing.addProvider(self.provider, True)
+        self.provider = BlurringAlgorithmProvider()
+        Processing.addProvider(self.provider, True)
 
     def initGui(self):
 
@@ -73,7 +75,7 @@ class Blurring:
     def unload(self):
         self.iface.removePluginWebMenu(u"&Quick OSM",self.mainWindowAction)
         self.iface.removeToolBarIcon(self.mainWindowAction)
-        #Processing.removeProvider(self.provider)
+        Processing.removeProvider(self.provider)
     
     def openMainWindow(self):
         self.iface.Blurring_mainWindowDialog.listWidget.setCurrentRow(0)
