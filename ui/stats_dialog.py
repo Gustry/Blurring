@@ -26,7 +26,9 @@ from stats import Ui_Form
 import os
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-import matplotlib.pyplot as plt
+
+#import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 class StatsWidget(QWidget, Ui_Form):
     
@@ -46,7 +48,7 @@ class StatsWidget(QWidget, Ui_Form):
         self.buttonBox_stats.button(QDialogButtonBox.Cancel).clicked.connect(self.hide)
         
         # a figure instance to plot on
-        self.figure = plt.figure()
+        self.figure = Figure()
 
         # this is the Canvas Widget that displays the `figure`
         # it takes the `figure` instance as a parameter to __init__
